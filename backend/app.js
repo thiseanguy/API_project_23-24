@@ -5,11 +5,14 @@ const cors = require('cors');
 const csurf = require('csurf');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const routes = require('./routes');
 
 const { environment } = require('./config');
 const isProduction = environment === 'production';
 
 const app = express();
+
+
 
 // Connect the morgan middleware
 // for logging information about requests and responses:
@@ -41,3 +44,7 @@ if (!isProduction) {
       }
     })
   );
+
+  app.use(routes); // Connect all the routes
+
+  module.exports = app;
