@@ -1,12 +1,10 @@
-
+// backend/routes/index.js
 const express = require('express');
 const router = express.Router();
+const apiRouter = require('./api');
 
-// // test route
-// router.get('/hello/world', function(req, res) {
-//   res.cookie('XSRF-TOKEN', req.csrfToken());
-//   res.send('Hello World!');
-// });
+router.use('/api', apiRouter);
+
 
 // Add a XSRF-TOKEN cookie
 router.get("/api/csrf/restore", (req, res) => {
@@ -16,5 +14,6 @@ router.get("/api/csrf/restore", (req, res) => {
       'XSRF-Token': csrfToken
     });
   });
+
 
 module.exports = router;
