@@ -53,6 +53,7 @@ router.get('/current', async (req, res) => {
             }
         });
 
+
         const resBody = {
             Spots: spots.map(spot => ({
             id: spot.id,
