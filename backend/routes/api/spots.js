@@ -5,8 +5,9 @@ const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 
-const { User } = require('../../db/models');
+//const { User } = require('../../db/models');
 const { Spot } = require('../../db/models');
+const { SpotImage } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -128,7 +129,8 @@ router.get('/:spotId', async (req, res) => {
         }
 });
 
-const validateNewSpot = [
+
+const validateSpot = [
     check('address')
       .exists({ checkFalsy: true })
       .withMessage('Street address is required.'),
@@ -162,7 +164,7 @@ const validateNewSpot = [
   ];
 
 //Create a spot
-router.post('/', requireAuth, validateNewSpot, async (req, res) => {
+router.post('/', requireAuth, validateSpot, async (req, res) => {
 
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const userId = req.user.id;
@@ -193,10 +195,85 @@ router.post('/', requireAuth, validateNewSpot, async (req, res) => {
         price: spot.name,
       };
 
+      const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
     return res.status(201).json(newSpot)
 })
 
+//Add an image to a spot based on spot's Id
+const validateSpotImage = [
+    check('url')
+      .exists({ checkFalsy: true })
+      .withMessage('a valid url is required.'),
+    check('preview')
+      .exists({ checkFalsy: true })
+      .isBoolean(true)
+      .withMessage('preview must be true or false.'),
+    handleValidationErrors
+  ];
+router.post('/:spotId/images',
+requireAuth,
+validateSpotImage,
+async (req, res) => {
 
+    const {url, preview} = req.body;
+    const userId = req.user.id;
+
+    const spotId = req.params.spotId
+    const spot = await Spot.findByPk(spotId);
+    if(!spot) {
+        return res.status(404).json({ error: "Spot couldn't be found" });
+    }
+
+    if(spot.ownerId !== userId) {
+        return res.status(401).json({ error: "you are not authorized to add images to this spot"})
+    }
+
+    const image = await SpotImage.create({
+        spotId: spotId,
+        url,
+        preview,
+    });
+
+    const newSpotImage = {
+        url: image.url,
+        preview: image.preview
+    }
+
+    return res.status(200).json(newSpotImage)
+})
+
+//Edit a spot
+router.put('/:spotId',
+requireAuth,
+async (req, res) => {
+
+    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+    const spotId = req.params.spotId
+    const userId = req.user.id;
+
+    const spot = await Spot.findByPk(spotId);
+
+    if(spot.ownerId !== userId) {
+        return res.status(401).json({ error: "you are not authorized to edit this spot"})
+    }
+
+    if (address) spot.address = address;
+    if (city) spot.city = city;
+    if (state) spot.state = state;
+    if (country) spot.country = country;
+    if (lat) spot.lat = lat;
+    if (lng) spot.lng = lng;
+    if (name) spot.name = name;
+    if (description) spot.description = description;
+    if (price) spot.price = price;
+
+
+    return res.status(200).json(spot)
+})
 
 
 module.exports = router;
