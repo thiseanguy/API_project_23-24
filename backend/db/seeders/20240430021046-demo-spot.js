@@ -58,6 +58,22 @@ module.exports = {
         avgRating: 2,
         previewImage: "image url"
       },
+      {
+        ownerId: 4,
+        address: "444 quatro qtr",
+        city: "barberville",
+        state: "Lousianna",
+        country: "United States of America",
+        lat: 29.9584058,
+        lng: 90.0644467,
+        name: "Four Gettaboutit",
+        description: "They Needed a Fourth Spot",
+        price: 44,
+        createdAt: "2024-04-04 20:39:36",
+        updatedAt: "2024-04-04 20:39:36",
+        avgRating: 4,
+        previewImage: "image url"
+      },
     ])
   },
 
