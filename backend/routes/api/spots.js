@@ -11,6 +11,7 @@ const { SpotImage } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -133,9 +134,11 @@ router.get('/:spotId', async (req, res) => {
 const validateSpot = [
     check('address')
       .exists({ checkFalsy: true })
+      .notEmpty()
       .withMessage('Street address is required.'),
     check('city')
       .exists({ checkFalsy: true })
+      .isString()
       .withMessage('City is required.'),
     check('state')
       .exists({ checkFalsy: true })
@@ -249,6 +252,7 @@ async (req, res) => {
 //Edit a spot
 router.put('/:spotId',
 requireAuth,
+validateSpot,
 async (req, res) => {
 
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
@@ -256,6 +260,10 @@ async (req, res) => {
     const userId = req.user.id;
 
     const spot = await Spot.findByPk(spotId);
+
+    if(!spot) {
+        return res.status(404).json({ error: "Spot couldn't be found" });
+    }
 
     if(spot.ownerId !== userId) {
         return res.status(401).json({ error: "you are not authorized to edit this spot"})
@@ -271,9 +279,39 @@ async (req, res) => {
     if (description) spot.description = description;
     if (price) spot.price = price;
 
+    await spot.save();
 
     return res.status(200).json(spot)
 })
 
+//Delete a spot
+router.delete('/:spotId',
+requireAuth,
+async (req, res) => {
+    const spotId = req.params.spotId;
+    const spot = await Spot.findByPk(spotId);
+    const userId = req.user.id;
+
+
+
+    try {
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ error: 'Spot not found' });
+        }
+        if(spot.ownerId !== userId) {
+            return res.status(401).json({ error: "you are not authorized to edit this spot"})
+        }
+
+        await spot.destroy();
+
+        return res.status(200).json({ message: 'Spot deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting spot:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+)
 
 module.exports = router;
