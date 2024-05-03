@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         models.SpotImage,
         { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true }
       );
+      Spot.hasMany(
+        models.Review,
+        { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true }
+      );
     }
   }
   Spot.init({
@@ -71,7 +75,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull:false,
       defaultValue: DataTypes.NOW
-    }
+    },
+    avgRating: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    previewImage: {
+      type: DataTypes.STRING
+    },
   }, {
     sequelize,
     modelName: 'Spot',
