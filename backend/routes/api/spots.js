@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 
-//const { User } = require('../../db/models');
+// const { User } = require('../../db/models');
 const { Spot } = require('../../db/models');
 const { SpotImage } = require('../../db/models');
 
