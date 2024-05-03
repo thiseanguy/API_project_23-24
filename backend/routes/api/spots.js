@@ -237,8 +237,8 @@ async (req, res) => {
 
     const image = await SpotImage.create({
         spotId: spotId,
-        url,
-        preview,
+        url: url,
+        preview: preview,
     });
 
     const newSpotImage = {
