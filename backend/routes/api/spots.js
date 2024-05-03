@@ -8,6 +8,9 @@ const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth')
 // const { User } = require('../../db/models');
 const { Spot } = require('../../db/models');
 const { SpotImage } = require('../../db/models');
+const { Review } = require('../../db/models');
+const { ReviewImage } = require('../../db/models')
+
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -311,7 +314,62 @@ async (req, res) => {
         console.error('Error deleting spot:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
-}
-)
+});
+
+//Get all reviews by spot id
+router.get('/:spotid/reviews', requireAuth, async (req, res) => {
+    try {
+
+        const spotId = req.params.spotId
+
+
+        const reviews = await Review.findAll({
+            where: {
+            spotId: spotId
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+          },
+          {
+            model: Spot,
+            attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price', 'previewImage']
+          },
+          {
+            model: ReviewImage,
+            attributes: ['id', 'url']
+          }
+        ]
+      });
+
+      // res format
+      const resReviews = reviews.map(review => ({
+        id: review.id,
+        userId: review.userId,
+        spotId: review.spotId,
+        review: review.review,
+        stars: review.stars,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+        User: {
+          id: review.User.id,
+          firstName: review.User.firstName,
+          lastName: review.User.lastName
+        },
+        ReviewImages: review.ReviewImages.map(image => ({
+          id: image.id,
+          url: image.url
+        }))
+      }));
+
+      // Send the formatted reviews as the response
+      res.json({ Reviews: resReviews });
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
 
 module.exports = router;

@@ -21,10 +21,8 @@ router.use(restoreUser);
 //Get all reviews from current user
 router.get('/current', requireAuth, async (req, res) => {
     try {
-      // Assuming you have a way to get the current user ID, e.g., from req.user
       const currentUserId = req.user.id;
 
-      // Fetch all reviews for the current user
       const reviews = await Review.findAll({
         where: {
           userId: currentUserId
@@ -45,7 +43,7 @@ router.get('/current', requireAuth, async (req, res) => {
         ]
       });
 
-      // Format the response
+      // res format
       const resReviews = reviews.map(review => ({
         id: review.id,
         userId: review.userId,
@@ -78,13 +76,13 @@ router.get('/current', requireAuth, async (req, res) => {
         }))
       }));
 
-      // Send the formatted reviews as the response
       res.json({ Reviews: resReviews });
     } catch (error) {
       console.error('Error fetching reviews:', error);
       res.status(500).send('Internal Server Error');
     }
   });
+
 
 
 
