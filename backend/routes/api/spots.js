@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 
 // const { User } = require('../../db/models');
+const {User} = require('../../db/models');
 const { Spot } = require('../../db/models');
 const { SpotImage } = require('../../db/models');
 const { Review } = require('../../db/models');
@@ -320,7 +321,13 @@ async (req, res) => {
 router.get('/:spotid/reviews', requireAuth, async (req, res) => {
     try {
 
-        const spotId = req.params.spotId
+        const spotId = req.params.spotid
+
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ error: "We couldn't find your spot" });
+        }
 
 
         const reviews = await Review.findAll({
@@ -370,6 +377,62 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+  //Create review based on spotId
+  const validateReview = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .isString()
+      .withMessage('Review text is required'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Stars rating must be an integer from 1 to 5'),
+    handleValidationErrors
+  ];
+  router.post('/:spotid/reviews',
+  requireAuth,
+  validateReview,
+  async (req, res) => {
+
+    const {review, stars} = req.body;
+    const userId = req.user.id;
+
+    const spotId = req.params.spotid
+
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+        return res.status(404).json({ error: "We couldn't find your spot" });
+    };
+
+    const reviewCheck = await Review.findAll({
+        where: {
+            spotId: spotId
+        }
+    });
+
+    if (reviewCheck) {
+        return res.status(500).json({
+            error: "You already have a review for this spot"
+        })
+    };
+
+    const newReview = await Review.create({
+        userId: userId,
+        spotId: spotId,
+        review,
+        stars,
+    });
+
+    const resReview = {
+        userId: userId,
+        review: newReview.review,
+        stars: newReview.stars,
+    }
+
+    return res.status(201).json(resReview)
+  })
 
 
 module.exports = router;
