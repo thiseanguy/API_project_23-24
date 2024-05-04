@@ -9,9 +9,9 @@ const { Spot } = require('../../db/models');
 const { Review } = require('../../db/models');
 const { ReviewImage } = require('../../db/models');
 
-// const { check } = require('express-validator');
-// const { handleValidationErrors } = require('../../utils/validation');
-// const { validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+//const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -121,8 +121,61 @@ router.get('/current', requireAuth, async (req, res) => {
     }
 
     return res.status(200).json({newReviewImage});
-
   })
+
+  //Edit a review
+  const validateReviewUpdate = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .isString()
+      .withMessage('Review text is required'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .withMessage('Stars are required')
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Stars must be an integer from 1 to 5'),
+      handleValidationErrors
+  ];
+  router.put('/:reviewId',
+    requireAuth,
+    validateReviewUpdate,
+    async (req, res) => {
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const formattedErrors = errors.array().reduce((acc, error) => {
+          acc[error.param] = error.msg;
+          return acc;
+        }, {});
+
+        return res.status(400).json({
+          message: 'Bad Request',
+          errors: formattedErrors,
+        });
+
+      }
+      const reviewId = req.params.reviewId;
+      const { review, stars } = req.body;
+
+        const reviewUpdate = await Review.findByPk(reviewId);
+
+        if (!reviewUpdate) {
+          return res.status(404).json({ message: 'Review could not be found' });
+        }
+
+        // Authorize
+        if (reviewUpdate.userId !== req.user.id) {
+          return res.status(403).json({ message: 'You are not authorized to edit this review' });
+        }
+
+        // Update the review
+        reviewUpdate.review = review;
+        reviewUpdate.stars = stars;
+        await reviewUpdate.save();
+
+        return res.status(200).json({ reviewUpdate });
+    }
+  )
 
 
 module.exports = router;
