@@ -124,6 +124,16 @@ router.get('/current', requireAuth, async (req, res) => {
   })
 
   //Edit a review
+  const findReview = async (req, res, next) => {
+    const reviewId = req.params.reviewId;
+    const reviewUpdate = await Review.findByPk(reviewId);
+    if (!reviewUpdate) {
+      return res.status(404).json({ message: 'Review could not be found' });
+    }
+    req.reviewUpdate = reviewUpdate;
+    next();
+  };
+
   const validateReviewUpdate = [
     check('review')
       .exists({ checkFalsy: true })
@@ -136,10 +146,25 @@ router.get('/current', requireAuth, async (req, res) => {
       .withMessage('Stars must be an integer from 1 to 5'),
       handleValidationErrors
   ];
+
   router.put('/:reviewId',
     requireAuth,
+    findReview,
     validateReviewUpdate,
     async (req, res) => {
+
+      const reviewId = req.params.reviewId;
+      const reviewUpdate = await Review.findByPk(reviewId);
+      // const { review, stars } = req.body;
+
+      // // does review exist
+      // if (!reviewUpdate) {
+      //   return res.status(404).json({ message: 'Review could not be found' });
+      // }
+      // Authorize
+      if (reviewUpdate.userId !== req.user.id) {
+        return res.status(403).json({ message: 'You are not authorized to edit this review' });
+      }
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -152,30 +177,18 @@ router.get('/current', requireAuth, async (req, res) => {
           message: 'Bad Request',
           errors: formattedErrors,
         });
-
       }
-      const reviewId = req.params.reviewId;
+
+      // Update the review
       const { review, stars } = req.body;
+      if (review) reviewUpdate.review = review;
+      if (stars) reviewUpdate.stars = stars;
+      await reviewUpdate.save();
 
-        const reviewUpdate = await Review.findByPk(reviewId);
-
-        if (!reviewUpdate) {
-          return res.status(404).json({ message: 'Review could not be found' });
-        }
-
-        // Authorize
-        if (reviewUpdate.userId !== req.user.id) {
-          return res.status(403).json({ message: 'You are not authorized to edit this review' });
-        }
-
-        // Update the review
-        reviewUpdate.review = review;
-        reviewUpdate.stars = stars;
-        await reviewUpdate.save();
-
-        return res.status(200).json({ reviewUpdate });
+      return res.status(200).json({ reviewUpdate });
     }
   )
+
 
 
 module.exports = router;
