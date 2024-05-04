@@ -62,6 +62,8 @@ async (req, res) => {
             userId: booking.userId,
             startDate: booking.startDate,
             endDate: booking.endDate,
+            createdAt: booking.createdAt,
+            updatedAt: booking.updatedAt
         }));
 
         res.json({ Bookings: resBookings });
@@ -69,8 +71,34 @@ async (req, res) => {
     } catch (error) {
         console.error('Error fetching bookings:', error);
         res.status(500).send('Internal Server Error');
-      }
+    }
 })
+
+router.delete('/:bookingId',
+requireAuth,
+async (req, res) => {
+    const bookingId = req.params.bookingId;
+    const booking = await Booking.findByPk(bookingId);
+    const userId = req.user.id;
+
+    try {
+        const booking = await Booking.findByPk(bookingId);
+
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+        if(booking.userId !== userId) {
+            return res.status(401).json({ error: "you are not authorized to edit this review"})
+        }
+
+        await booking.destroy();
+
+        return res.status(200).json({ message: 'Booking deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting booking:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 module.exports = router;
