@@ -228,8 +228,8 @@ async (req, res) => {
 
     const {url, preview} = req.body;
     const userId = req.user.id;
+    const spotId = req.params.spotId;
 
-    const spotId = req.params.spotId
     const spot = await Spot.findByPk(spotId);
     if(!spot) {
         return res.status(404).json({ error: "Spot couldn't be found" });
@@ -260,7 +260,7 @@ validateSpot,
 async (req, res) => {
 
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
-    const spotId = req.params.spotId
+    const spotId = req.params.spotId;
     const userId = req.user.id;
 
     const spot = await Spot.findByPk(spotId);
