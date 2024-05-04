@@ -9,10 +9,9 @@ const { Spot } = require('../../db/models');
 const { Review } = require('../../db/models');
 const { ReviewImage } = require('../../db/models');
 
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const { validationResult } = require('express-validator');
-const reviewimage = require('../../db/models/reviewimage');
+// const { check } = require('express-validator');
+// const { handleValidationErrors } = require('../../utils/validation');
+// const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
