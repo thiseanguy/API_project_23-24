@@ -254,8 +254,18 @@ async (req, res) => {
 })
 
 //Edit a spot
+const findSpot = async (req, res, next) => {
+  const spotId = req.params.spotId;
+  const spotUpdate = await Spot.findByPk(spotId);
+  if (!spotUpdate) {
+    return res.status(404).json({ message: 'Spot could not be found' });
+  }
+  req.spotUpdate = spotUpdate;
+  next();
+};
 router.put('/:spotId',
 requireAuth,
+findSpot,
 validateSpot,
 async (req, res) => {
 
@@ -263,11 +273,11 @@ async (req, res) => {
     const spotId = req.params.spotId;
     const userId = req.user.id;
 
-    const spot = await Spot.findByPk(spotId);
+    // const spot = await Spot.findByPk(spotId);
 
-    if(!spot) {
-        return res.status(404).json({ error: "Spot couldn't be found" });
-    }
+    // if(!spot) {
+    //     return res.status(404).json({ error: "Spot couldn't be found" });
+    // }
 
     if(spot.ownerId !== userId) {
         return res.status(401).json({ error: "you are not authorized to edit this spot"})

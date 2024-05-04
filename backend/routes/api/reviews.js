@@ -9,9 +9,9 @@ const { Spot } = require('../../db/models');
 const { Review } = require('../../db/models');
 const { ReviewImage } = require('../../db/models');
 
-// const { check } = require('express-validator');
-// const { handleValidationErrors } = require('../../utils/validation');
-// const { validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+//const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -121,8 +121,101 @@ router.get('/current', requireAuth, async (req, res) => {
     }
 
     return res.status(200).json({newReviewImage});
-
   })
 
+  //Edit a review
+  const findReview = async (req, res, next) => {
+    const reviewId = req.params.reviewId;
+    const reviewUpdate = await Review.findByPk(reviewId);
+    if (!reviewUpdate) {
+      return res.status(404).json({ message: 'Review could not be found' });
+    }
+    req.reviewUpdate = reviewUpdate;
+    next();
+  };
+
+  const validateReviewUpdate = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .isString()
+      .withMessage('Review text is required'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .withMessage('Stars are required')
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Stars must be an integer from 1 to 5'),
+      handleValidationErrors
+  ];
+
+  router.put('/:reviewId',
+    requireAuth,
+    findReview,
+    validateReviewUpdate,
+    async (req, res) => {
+
+      const reviewId = req.params.reviewId;
+      const reviewUpdate = await Review.findByPk(reviewId);
+      // const { review, stars } = req.body;
+
+      // // does review exist
+      // if (!reviewUpdate) {
+      //   return res.status(404).json({ message: 'Review could not be found' });
+      // }
+      // Authorize
+      if (reviewUpdate.userId !== req.user.id) {
+        return res.status(403).json({ message: 'You are not authorized to edit this review' });
+      }
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const formattedErrors = errors.array().reduce((acc, error) => {
+          acc[error.param] = error.msg;
+          return acc;
+        }, {});
+
+        return res.status(400).json({
+          message: 'Bad Request',
+          errors: formattedErrors,
+        });
+      }
+
+      // Update the review
+      const { review, stars } = req.body;
+      if (review) reviewUpdate.review = review;
+      if (stars) reviewUpdate.stars = stars;
+      await reviewUpdate.save();
+
+      return res.status(200).json({ reviewUpdate });
+    }
+  )
+
+  //Delete a review
+router.delete('/:reviewId',
+requireAuth,
+async (req, res) => {
+    const reviewId = req.params.reviewId;
+    const review = await Review.findByPk(reviewId);
+    const userId = req.user.id;
+
+
+
+    try {
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ error: 'Review not found' });
+        }
+        if(review.userId !== userId) {
+            return res.status(401).json({ error: "you are not authorized to edit this review"})
+        }
+
+        await review.destroy();
+
+        return res.status(200).json({ message: 'Review deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting review:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 module.exports = router;
