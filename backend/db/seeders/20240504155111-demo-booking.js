@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Review.bulkCreate([
+    await Booking.bulkCreate([
       {
         id: 1,
         spotId: 1,
