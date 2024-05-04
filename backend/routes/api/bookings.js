@@ -39,7 +39,7 @@ async (req, res) => {
         })
 
         // res format
-        const resBookings = bookings.map(review => ({
+        const resBookings = bookings.map(booking => ({
             id: booking.id,
             spotId: booking.spotId,
             Spot: {
