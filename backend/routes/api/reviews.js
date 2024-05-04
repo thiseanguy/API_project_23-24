@@ -155,12 +155,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
       const reviewId = req.params.reviewId;
       const reviewUpdate = await Review.findByPk(reviewId);
-      // const { review, stars } = req.body;
 
-      // // does review exist
-      // if (!reviewUpdate) {
-      //   return res.status(404).json({ message: 'Review could not be found' });
-      // }
       // Authorize
       if (reviewUpdate.userId !== req.user.id) {
         return res.status(403).json({ message: 'You are not authorized to edit this review' });
@@ -196,8 +191,6 @@ async (req, res) => {
     const reviewId = req.params.reviewId;
     const review = await Review.findByPk(reviewId);
     const userId = req.user.id;
-
-
 
     try {
         const review = await Review.findByPk(reviewId);
