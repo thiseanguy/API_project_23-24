@@ -1,6 +1,6 @@
 
 const express = require('express')
-const { Op } = require('sequelize');
+const { Sequelize, DataTypes, Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
@@ -257,11 +257,11 @@ async (req, res) => {
 //Edit a spot
 const findSpot = async (req, res, next) => {
   const spotId = req.params.spotId;
-  const spotUpdate = await Spot.findByPk(spotId);
-  if (!spotUpdate) {
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
     return res.status(404).json({ message: 'Spot could not be found' });
   }
-  req.spotUpdate = spotUpdate;
+  req.spot = spot;
   next();
 };
 router.put('/:spotId',
@@ -270,11 +270,11 @@ findSpot,
 validateSpot,
 async (req, res) => {
 
-    const {address, city, state, country, lat, lng, name, description, price} = req.body;
-    const spotId = req.params.spotId;
-    const userId = req.user.id;
+  const {address, city, state, country, lat, lng, name, description, price} = req.body;
+  const spotId = req.params.spotId;
+  const userId = req.user.id;
 
-    // const spot = await Spot.findByPk(spotId);
+  const spot = await Spot.findByPk(spotId);
 
     // if(!spot) {
     //     return res.status(404).json({ error: "Spot couldn't be found" });
@@ -296,7 +296,24 @@ async (req, res) => {
 
     await spot.save();
 
-    return res.status(200).json(spot)
+    spot.updatedAt = Sequelize.literal('CURRENT_TIMESTAMP');
+
+    const resBody = {
+      id: spot.id,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: spot.createdAt,
+      updatedAt:spot.updatedAt
+    };
+
+    return res.status(200).json(resBody)
 })
 
 //Delete a spot
