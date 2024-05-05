@@ -576,13 +576,13 @@ const validateBookingConflicts = async (value, { req }) => {
   return true;
 };
 
-const validateConflicts = [
-  check('startDate')
-  .custom(validateBookingConflicts),
-  check('endDate')
-  .custom(validateBookingConflicts),
-  handleValidationErrors
-]
+// const validateConflicts = [
+//   check('startDate')
+//   .custom(validateBookingConflicts),
+//   check('endDate')
+//   .custom(validateBookingConflicts),
+//   handleValidationErrors
+// ]
 
 const validateNewBooking = [
   check('startDate')
@@ -594,13 +594,15 @@ const validateNewBooking = [
   check('endDate')
     .exists({ checkFalsy: true })
     .withMessage('End date cannot be on or before be before start date'),
+  check('startDate', 'endDate')
+  .custom(validateBookingConflicts),
     handleValidationErrors
 ];
 
 router.post('/:spotId/bookings',
 requireAuth,
 validateNewBooking,
-validateConflicts,
+// validateConflicts,
 async (req, res) => {
   const { startDate, endDate } = req.body;
   const userId = req.user.id;
@@ -615,6 +617,8 @@ async (req, res) => {
     return res.status(401).json({ error: "user is not authorized to create bookings for their owned spot" });
   }
 
+
+
   const booking = await Booking.create({
     spotId: spotId,
     userId: userId,
@@ -622,7 +626,16 @@ async (req, res) => {
     endDate: endDate,
   });
 
-  return res.status(201).json({ booking });
+  const resBooking = {
+    spotId: booking.spotId,
+    userId: booking.userId,
+    startDate: booking.startDate,
+    endDate: booking.endDate,
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt
+  };
+
+  return res.status(201).json({ resBooking });
 })
 
 module.exports = router;
