@@ -501,8 +501,6 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
           lat: booking.Spot.lat,
           lng: booking.Spot.lng,
           name: booking.Spot.name,
-          // Description, price, createdAt, updatedAt, avgRating, previewImage...
-          // Add any other properties you need
         },
         userId: booking.userId,
         startDate: booking.startDate,
@@ -565,24 +563,11 @@ const validateBookingConflicts = async (value, { req }) => {
     }
     if (existingBookings.some(booking => booking.endDate === endDate)) {
       errors.endDate = 'End date conflicts with an existing booking';
-
     }
     throw { errors, message: 'Sorry, this spot is already booked for the specified dates' };
-    // if (Object.keys(errors).length > 0) {
-    //   throw { errors, message: 'Sorry, this spot is already booked for the specified dates' };
-    // }
   }
-
   return true;
 };
-
-// const validateConflicts = [
-//   check('startDate')
-//   .custom(validateBookingConflicts),
-//   check('endDate')
-//   .custom(validateBookingConflicts),
-//   handleValidationErrors
-// ]
 
 const validateNewBooking = [
   check('startDate')
@@ -599,10 +584,11 @@ const validateNewBooking = [
     handleValidationErrors
 ];
 
+
+
 router.post('/:spotId/bookings',
 requireAuth,
 validateNewBooking,
-// validateConflicts,
 async (req, res) => {
   const { startDate, endDate } = req.body;
   const userId = req.user.id;
@@ -635,7 +621,12 @@ async (req, res) => {
     updatedAt: booking.updatedAt
   };
 
-  return res.status(201).json({ resBooking });
+  if (Object.keys(resBooking.errors).length === 0) {
+    delete resBooking.errors;
+  }
+
+  return res.status(200).json(resBooking);
+
 })
 
 module.exports = router;
