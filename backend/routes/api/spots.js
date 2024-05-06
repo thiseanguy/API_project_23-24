@@ -278,7 +278,7 @@ async (req, res) => {
       preview: image.preview
     }
 
-    return res.status(200).json(image)
+    return res.status(200).json(newSpotImage)
 })
 
 //Edit a spot
