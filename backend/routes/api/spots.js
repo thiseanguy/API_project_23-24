@@ -613,6 +613,7 @@ async (req, res) => {
   });
 
   const resBooking = {
+    id: booking.id,
     spotId: booking.spotId,
     userId: booking.userId,
     startDate: booking.startDate,
