@@ -459,7 +459,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
         }
     });
 
-    if (reviewCheck.length > 0) {
+    if (reviewCheck) {
         return res.status(500).json({
             error: "You already have a review for this spot"
         })
@@ -473,9 +473,12 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
     });
 
     const resReview = {
-        userId: userId,
-        review: newReview.review,
-        stars: newReview.stars,
+      id: newReview.id,
+      userId: userId,
+      review: newReview.review,
+      stars: newReview.stars,
+      createdAt: newReview.createdAt,
+      updatedAt: newReview.updatedAt
     }
 
     return res.status(201).json(resReview)
