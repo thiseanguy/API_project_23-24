@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 
 const {User} = require('../../db/models');
-const { Spot } = require('../../db/models');
-const { SpotImage } = require('../../db/models');
+const { Review } = require('../../db/models');
+const { ReviewImage } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -24,21 +24,20 @@ router.delete('/:imageId',
         const userId = req.user.id
 
 
-        const spotImage = await SpotImage.findByPk(imageId);
-        if (!spotImage) {
+        const reviewImage = await ReviewImage.findByPk(imageId);
+        if (!reviewImage) {
             return res.status(404).json({ error: "image could not be found"})
         }
-        const spot = await Spot.findByPk(spotImage.spotId);
+        const review = await Review.findByPk(reviewImage.reviewId);
 
-        if(userId !== spot.ownerId) {
+        if(userId !== review.userId) {
             return res.status(401).json({ error: "you are not authorized to edit this review"})
         }
 
-        await spotImage.destroy();
+        await reviewImage.destroy();
 
-        return res.status(200).json({ message: 'spot-image deleted successfully' });
+        return res.status(200).json({ message: 'review-image deleted successfully' });
     }
 )
-
 
 module.exports = router;
