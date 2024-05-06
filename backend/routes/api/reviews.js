@@ -117,7 +117,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
     const newReviewImage = {
       id: image.id,
-      reviewId: reviewId,
+      // reviewId: reviewId,
       url: image.url
     }
 
