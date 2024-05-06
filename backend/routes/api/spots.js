@@ -505,7 +505,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
   async (req, res) => {
     try{
       const userId = req.user.id;
-      const user = await User.findByPk(booking.userId)
+      // const user = await User.findByPk(booking.userId)
       const spotId = req.params.spotId
 
       const spot = await Spot.findByPk(spotId)
@@ -521,19 +521,34 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
               {
                 model: Spot,
                 attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price', 'previewImage']
-              }
+              },
+              {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+              },
             ]
       })
 
       // res format
       const ownerBookings = bookings.map(booking => ({
         User: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          id: booking.User.id,
+          firstName: booking.User.firstName,
+          lastName: booking.User.lastName,
         },
         id: booking.id,
         spotId: booking.spotId,
+        // Spot: {
+        //   id: booking.Spot.id,
+        //   ownerId: booking.Spot.ownerId,
+        //   address: booking.Spot.address,
+        //   city: booking.Spot.city,
+        //   state: booking.Spot.state,
+        //   country: booking.Spot.country,
+        //   lat: booking.Spot.lat,
+        //   lng: booking.Spot.lng,
+        //   name: booking.Spot.name,
+        // },
         userId: booking.userId,
         startDate: booking.startDate,
         endDate: booking.endDate,
