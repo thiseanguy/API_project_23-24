@@ -455,7 +455,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
 
     const reviewCheck = await Review.findAll({
         where: {
-            spotId: spotId
+            userId: userId
         }
     });
 
