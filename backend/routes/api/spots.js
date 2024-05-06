@@ -373,7 +373,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
         const spot = await Spot.findByPk(spotId);
 
         if (!spot) {
-            return res.status(404).json({ error: "We couldn't find your spot" });
+            return res.status(404).json({ message: "We couldn't find your spot" });
         }
 
 
@@ -450,7 +450,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
     const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
-        return res.status(404).json({ error: "We couldn't find your spot" });
+        return res.status(404).json({ message: "We couldn't find your spot" });
     };
 
     const reviewCheck = await Review.findAll({
