@@ -104,10 +104,20 @@ router.get('/:spotId', async (req, res) => {
         const spotId = req.params.spotId;
 
         const spot = await Spot.findByPk(spotId);
-
         if (!spot) {
-            return res.status(404).json({ error: "We couldn't find your spot" });
+            return res.status(404).json({ error: "Spot could not be found" });
         }
+
+
+        const owner = await User.findByPk(spot.ownerId)
+        const spotImages = await SpotImage.findAll({
+          where: {
+            spotId: spotId
+          },
+          attributes: {exclude: ['createdAt', 'updatedAt', 'spotId']}
+        })
+
+
 
         const resBody = {
             id: spot.id,
@@ -124,7 +134,13 @@ router.get('/:spotId', async (req, res) => {
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
             avgRating: spot.avgRating,
-            previewImage: spot.previewImage
+            previewImage: spot.previewImage,
+            SpotImages: spotImages,
+            Owner: {
+              id: owner.id,
+              firstname: owner.firstName,
+              lastName: owner.lastName
+            }
         };
 
         res.status(200)

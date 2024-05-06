@@ -24,6 +24,24 @@ module.exports = {
         url: "second demo image",
         preview: true
       },
+      {
+        id: 3,
+        spotId: 4,
+        url: "third demo image",
+        preview: true
+      },
+      {
+        id: 4,
+        spotId: 4,
+        url: "scary web",
+        preview: true
+      },
+      {
+        id: 5,
+        spotId: 4,
+        url: "belis",
+        preview: true
+      },
     ])
   },
 
