@@ -269,7 +269,7 @@ async (req, res) => {
     const image = await SpotImage.create({
         spotId: spotId,
         url: url,
-        preview: preview,
+        preview: preview
     });
 
     const newSpotImage = {
@@ -278,7 +278,7 @@ async (req, res) => {
       preview: image.preview
     }
 
-    return res.status(200).json(newSpotImage)
+    return res.status(200).json(image)
 })
 
 //Edit a spot
