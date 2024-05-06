@@ -459,7 +459,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
         }
     });
 
-    if (reviewCheck) {
+    if (reviewCheck.length > 0) {
         return res.status(500).json({
             error: "You already have a review for this spot"
         })
