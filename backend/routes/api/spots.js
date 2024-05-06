@@ -472,16 +472,16 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
         stars,
     });
 
-    // const resReview = {
-    //   id: newReview.id,
-    //   userId: userId,
-    //   review: newReview.review,
-    //   stars: newReview.stars,
-    //   createdAt: newReview.createdAt,
-    //   updatedAt: newReview.updatedAt
-    // }
+    const resReview = {
+      id: newReview.id,
+      userId: userId,
+      review: newReview.review,
+      stars: newReview.stars,
+      createdAt: newReview.createdAt,
+      updatedAt: newReview.updatedAt
+    }
 
-    return res.status(201).json(newReview)
+    return res.status(201).json(resReview)
   })
 
   //get all bookings from spotId
