@@ -23,6 +23,17 @@ const router = express.Router();
 //restores the user object from the JWT toke
 router.use(restoreUser);
 
+//built in 404
+const findSpot = async (req, res, next) => {
+  const spotId = req.params.spotId;
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({ message: 'Spot could not be found' });
+  }
+  req.spot = spot;
+  next();
+};
+
 
 // Get all spots
 router.get('/', async (req, res) => {
@@ -217,6 +228,8 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
         name: spot.name,
         description: spot.name,
         price: spot.name,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt
       };
 
       const errors = validationResult(req);
@@ -233,24 +246,21 @@ const validateSpotImage = [
       .exists({ checkFalsy: true })
       .withMessage('a valid url is required.'),
     check('preview')
-      .exists({ checkFalsy: true })
-      .isBoolean(true)
+      // .exists({ checkFalsy: true })
+      .isBoolean()
       .withMessage('preview must be true or false.'),
     handleValidationErrors
   ];
 router.post('/:spotId/images',
 requireAuth,
+findSpot,
 validateSpotImage,
 async (req, res) => {
 
     const {url, preview} = req.body;
     const userId = req.user.id;
     const spotId = req.params.spotId;
-
-    const spot = await Spot.findByPk(spotId);
-    if(!spot) {
-        return res.status(404).json({ error: "Spot couldn't be found" });
-    }
+    const spot = await Spot.findByPk(spotId)
 
     if(spot.ownerId !== userId) {
         return res.status(401).json({ error: "you are not authorized to add images to this spot"})
@@ -263,23 +273,16 @@ async (req, res) => {
     });
 
     const newSpotImage = {
-        url: image.url,
-        preview: image.preview
+      id: image.id,
+      url: image.url,
+      preview: image.preview
     }
 
     return res.status(200).json(newSpotImage)
 })
 
 //Edit a spot
-const findSpot = async (req, res, next) => {
-  const spotId = req.params.spotId;
-  const spot = await Spot.findByPk(spotId);
-  if (!spot) {
-    return res.status(404).json({ message: 'Spot could not be found' });
-  }
-  req.spot = spot;
-  next();
-};
+
 router.put('/:spotId',
 requireAuth,
 findSpot,
