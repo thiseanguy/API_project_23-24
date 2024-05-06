@@ -14,12 +14,10 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await ReviewImage.bulkCreate([
       {
-        id: 1,
         reviewId: 1,
         url: "demo rev-image"
       },
       {
-        id: 2,
         reviewId: 2,
         url: "second demo rev-image"
       },

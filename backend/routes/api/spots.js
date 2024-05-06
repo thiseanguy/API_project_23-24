@@ -269,7 +269,7 @@ async (req, res) => {
     const image = await SpotImage.create({
         spotId: spotId,
         url: url,
-        preview: preview,
+        preview: preview
     });
 
     const newSpotImage = {
@@ -278,7 +278,7 @@ async (req, res) => {
       preview: image.preview
     }
 
-    return res.status(200).json(newSpotImage)
+    return res.status(200).json(image)
 })
 
 //Edit a spot
@@ -373,7 +373,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
         const spot = await Spot.findByPk(spotId);
 
         if (!spot) {
-            return res.status(404).json({ error: "We couldn't find your spot" });
+            return res.status(404).json({ message: "We couldn't find your spot" });
         }
 
 
@@ -450,7 +450,7 @@ router.get('/:spotid/reviews', requireAuth, async (req, res) => {
     const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
-        return res.status(404).json({ error: "We couldn't find your spot" });
+        return res.status(404).json({ message: "We couldn't find your spot" });
     };
 
     const reviewCheck = await Review.findAll({
