@@ -10,9 +10,9 @@ const { Spot } = require('../../db/models');
 const { Review } = require('../../db/models');
 const { ReviewImage } = require('../../db/models');
 
-// const { check } = require('express-validator');
-// const { handleValidationErrors } = require('../../utils/validation');
-// const { validationResult } = require('express-validator');
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -99,6 +99,34 @@ async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+// //Edit a booking
+// // find booking
+// const findBooking = async (req, res, next) => {
+//     const bookingId = req.params.bookingId;
+//     const booking = await Booking.findByPk(bookingId);
+//     if (!booking) {
+//       return res.status(404).json({ message: 'Booking could not be found' });
+//     }
+//     req.booking = booking;
+//     next();
+//   };
+
+//   //Validate Booking conflicts
+//   const validateConflicts = [
+//     check('startDate')
+//     .custom(validateBookingConflicts),
+//     check('endDate')
+//     .custom(validateBookingConflicts),
+//     handleValidationErrors
+//   ]
+
+// router.put('/:bookingId'),
+// requireAuth,
+// async (req, res) => {
+
+// }
+
 
 
 module.exports = router;
