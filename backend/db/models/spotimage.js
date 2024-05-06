@@ -33,8 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     preview: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN
+      // allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
   }, {
     sequelize,
