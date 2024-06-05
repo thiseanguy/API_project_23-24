@@ -1,0 +1,67 @@
+/* Reset some default styles */
+body, ul {
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Profile button styling */
+button {
+    font-size: 24px;
+    color: #333;
+}
+
+button:hover {
+    color: #555;
+}
+
+/* Dropdown menu styling */
+.profile-dropdown {
+    position: absolute;
+    left: 10px;
+    top: 40px;
+    background: white;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 200px;
+    z-index: 1000;
+}
+
+.profile-dropdown.hidden {
+    display: none;
+}
+
+.profile-dropdown li {
+    padding: 10px 20px;
+    white-space: nowrap;
+}
+
+.profile-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-dropdown li button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.profile-dropdown li button:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-dropdown li:not(:last-child) {
+    border-bottom: 1px solid #e0e0e0;
+}
