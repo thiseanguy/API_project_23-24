@@ -1,4 +1,4 @@
-/* Reset some default styles */
+Reset some default styles
 body, ul {
     margin: 0;
     padding: 0;
@@ -21,10 +21,10 @@ button:hover {
 }
 
 /* Dropdown menu styling */
-.profile-dropdown {
+ .profile-dropdown {
     position: absolute;
     left: 10px;
-    top: 40px;
+    top: 50px;
     background: white;
     list-style: none;
     padding: 10px 0;
@@ -39,7 +39,7 @@ button:hover {
     display: none;
 }
 
-.profile-dropdown li {
+ .profile-dropdown li {
     padding: 10px 20px;
     white-space: nowrap;
 }
