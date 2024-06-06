@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
+import { GiArrowWings } from "react-icons/gi"; // ???
+import { GiBed } from "react-icons/gi";
+import { GiChessPawn } from "react-icons/gi";
 import './App.css'
 
 function Layout() {
@@ -30,7 +33,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Welcome!</h1>
+        element: <h1>Save<GiChessPawn/>Point</h1>
       }
     ]
   }
