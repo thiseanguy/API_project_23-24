@@ -1,33 +1,38 @@
-import { csrfFetch } from './csrf';
+// store/spots.js
 
-//action types
+// Action Types
 const SET_SPOTS = 'spots/setSpots';
 
-//action creators
+// Action Creators
 const setSpots = (spots) => ({
-    type: SET_SPOTS,
-    payload: spots,
+  type: SET_SPOTS,
+  payload: spots,
 });
 
 // Thunks
 export const fetchSpots = () => async (dispatch) => {
-    const response = await csrfFetch('/api/spots');
-    const spots = await response.json();
-    dispatch(setSpots(spots));
-  };
-
-  // Initial State
-const initialState = {
-    spots: [],
-    currentSpot: null,
-  };
-
-
-const spotsReducer = (state = initialState, action) => {
-switch (action.type) {
-    case SET_SPOTS:
-        return { ...state, spots: action.payload };
-        default:
-            return state;
-        }
+  const response = await fetch('/api/spots', {
+    method: 'GET',
+  });
+  const data = await response.json();
+  dispatch(setSpots(data.Spots));
+  console.log("SPOTS", data)
 };
+
+// Initial State
+const initialState = {
+  spots: [],
+  currentSpot: null,
+};
+
+// Reducer
+const spotsReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case SET_SPOTS:
+      return { ...state, spots: action.payload };
+    default:
+      return state;
+  }
+};
+
+export default spotsReducer;

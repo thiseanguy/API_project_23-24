@@ -1,12 +1,14 @@
+// App.jsx
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
-import { GiArrowWings } from "react-icons/gi"; // ???
-import { GiBed } from "react-icons/gi";
+import SpotsLandingPage from './components/SpotsLandingPage';
+
+// Style
 import { GiChessPawn } from "react-icons/gi";
-import './App.css'
+import './App.css';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -14,18 +16,22 @@ function Layout() {
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
+      setIsLoaded(true);
     });
   }, [dispatch]);
 
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
+      {isLoaded && (
+        <>
+          <h1>Save<GiChessPawn />Point</h1>
+          <Outlet />
+        </>
+      )}
     </>
   );
 }
-
 
 const router = createBrowserRouter([
   {
@@ -33,10 +39,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Save<GiChessPawn/>Point</h1>
-      }
-    ]
-  }
+        element: <SpotsLandingPage />,
+      },
+    ],
+  },
 ]);
 
 function App() {
