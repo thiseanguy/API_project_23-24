@@ -26,7 +26,7 @@ module.exports = {
         createdAt: "2021-11-19 20:39:36",
         updatedAt: "2021-11-19 20:39:36",
         avgRating: 4.5,
-        previewImage: "image url"
+        previewImage: "https://maephimproperty.com/wp-content/uploads/2023/11/indigo-sample-house-model.jpg"
       },
       {
         ownerId: 2,
@@ -40,7 +40,7 @@ module.exports = {
         description: "There's wine here. We make wine in the backyard",
         price: 250,
         avgRating: 3.5,
-        previewImage: "image url"
+        previewImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRHpwZHFdDYiuW8mP4CUAA7x6o3E9_KnBPEw&s"
       },
       {
         ownerId: 3,
@@ -56,7 +56,7 @@ module.exports = {
         createdAt: "2010-06-20 20:39:36",
         updatedAt: "2010-06-20 20:39:36",
         avgRating: 2,
-        previewImage: "image url"
+        previewImage: "https://media.architecturaldigest.com/photos/65dce5d489212862875c04a9/16:9/w_2560%2Cc_limit/GettyImages-74179815.jpg"
       },
       {
         ownerId: 4,
@@ -72,7 +72,7 @@ module.exports = {
         createdAt: "2024-04-04 20:39:36",
         updatedAt: "2024-04-04 20:39:36",
         avgRating: 4,
-        previewImage: "image url"
+        previewImage: "https://d3mqmy22owj503.cloudfront.net/10/500010/images/poi/sample-house-2/10-logo.jpg"
       },
     ])
   },

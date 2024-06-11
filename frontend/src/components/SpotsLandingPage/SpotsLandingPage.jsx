@@ -13,7 +13,7 @@ const SpotsLandingPage = () => {
     dispatch(fetchSpots());
   }, [dispatch]);
 
-  console.log('Spots from state:', spots);
+  // console.log('Spots from state:', spots);
 
   if (!Array.isArray(spots)) {
     return <div>Loading...</div>;
@@ -24,11 +24,11 @@ const SpotsLandingPage = () => {
       <h2>All Spots</h2>
       <ul className="spot-list">
         {spots.map((spot) => (
-          <li key={spot.id} className="spot-tile" data-tooltip-id={`tooltip`} data-tooltip-content={spot.name}>
+          <li key={spot.id} className="spot-tile" data-tooltip-id={`tooltip-spot-tile`} data-tooltip-content={spot.name}>
                 <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
                 <div className="spot-info">
                   <p>{spot.city}, {spot.state}</p>
-                <Tooltip id={`tooltip`} />
+                <Tooltip id={`tooltip-spot-tile`} />
             </div>
           </li>
         ))}
