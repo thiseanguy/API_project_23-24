@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpots } from '../../store/spots'
+import { Tooltip } from 'react-tooltip'
 import './SpotsLandingPage.css';
 
 const SpotsLandingPage = () => {
@@ -12,6 +13,8 @@ const SpotsLandingPage = () => {
     dispatch(fetchSpots());
   }, [dispatch]);
 
+  console.log('Spots from state:', spots);
+
   if (!Array.isArray(spots)) {
     return <div>Loading...</div>;
   }
@@ -21,11 +24,11 @@ const SpotsLandingPage = () => {
       <h2>All Spots</h2>
       <ul className="spot-list">
         {spots.map((spot) => (
-          <li key={spot.id} className="spot-tile" title={spot.name}>
-            <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
-            <div className="spot-info">
-              {/* <h3>{spot.name}</h3> */}
-              <p>{spot.city}, {spot.state}</p>
+          <li key={spot.id} className="spot-tile" data-tooltip-id={`tooltip`} data-tooltip-content={spot.name}>
+                <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
+                <div className="spot-info">
+                  <p>{spot.city}, {spot.state}</p>
+                <Tooltip id={`tooltip`} />
             </div>
           </li>
         ))}
