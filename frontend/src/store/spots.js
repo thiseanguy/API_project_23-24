@@ -16,7 +16,6 @@ export const fetchSpots = () => async (dispatch) => {
   });
   const data = await response.json();
   dispatch(setSpots(data.Spots));
-  console.log("SPOTS", data)
 };
 
 // Initial State

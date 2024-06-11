@@ -21,10 +21,10 @@ const SpotsLandingPage = () => {
       <h2>All Spots</h2>
       <ul className="spot-list">
         {spots.map((spot) => (
-          <li key={spot.id} className="spot-tile">
+          <li key={spot.id} className="spot-tile" title={spot.name}>
             <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
             <div className="spot-info">
-              <h3>{spot.name}</h3>
+              {/* <h3>{spot.name}</h3> */}
               <p>{spot.city}, {spot.state}</p>
             </div>
           </li>
