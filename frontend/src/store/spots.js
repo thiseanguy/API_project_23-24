@@ -4,6 +4,7 @@
 const SET_SPOTS = 'spots/setSpots';
 const SET_SPOT_DETAILS = 'spots/setSpotDetails'
 
+
 // Action Creators
 const setSpots = (spots) => ({
   type: SET_SPOTS,
@@ -35,7 +36,6 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
   }
 };
 
-
 // Initial State
 const initialState = {
   spots: [],
@@ -50,7 +50,7 @@ const spotsReducer = (state = initialState, action) => {
     case SET_SPOT_DETAILS:
       return { ...state, currentSpot: action.payload};
     default:
-      return state;
+        return state;
   }
 };
 

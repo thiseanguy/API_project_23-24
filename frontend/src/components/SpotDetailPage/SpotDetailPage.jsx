@@ -14,19 +14,57 @@ const SpotDetailPage = () => {
     dispatch(fetchSpotDetails(spotId));
   }, [dispatch, spotId]);
 
+  const handleReserveClick = () => {
+    alert("Feature coming soon");
+  };
+
   if (!spot) {
     return <div>Loading...</div>;
   }
+  const {
+    name,
+    city,
+    state,
+    country,
+    previewImage,
+    SpotImages = [],
+    description,
+    avgRating,
+    price,
+    Owner: owner,
+  } = spot;
+
+
 
   return (
     <div className="spot-detail-page">
-      <h2>{spot.name}</h2>
-      <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
-      <p>{spot.description}</p>
-      <p>{spot.city}, {spot.state}</p>
-      <p>Rating: {spot.avgRating !== undefined && spot.avgRating !== null ? spot.avgRating.toFixed(1) : 'New'}</p>
-      <p>Price: ${spot.price}</p>
-      {/* more details as needed */}
+      <h2>{name}</h2>
+      <p>Location: {city}, {state}, {country}</p>
+
+        <div className="spot-images">
+            <div className="large-image">
+                <img src={previewImage} alt={name} className="spot-thumbnail" />
+            </div>
+            <div className="small-images">
+                {SpotImages.slice(0, 4).map((img, index) => (
+                    <img key={index} src={img.url} alt={`${name} ${index + 1}`} className="spot-thumbnail-small" />
+                ))}
+        </div>
+    </div>
+
+    <div className="spot-details">
+        <div className="spot-info">
+            {owner && <p>Hosted by {owner.firstName} {owner.lastName}</p>}
+            <p>{description}</p>
+        </div>
+        <div className="callout-box">
+            <p>Rating: {avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'}</p>
+            <p>
+                Price: ${price}
+            </p>
+                <button className='reserve-button' onClick={handleReserveClick}>Reserve</button>
+            </div>
+        </div>
     </div>
   );
 };
