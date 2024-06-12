@@ -3,7 +3,7 @@ import { useSelector} from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 // import { ImHome } from "react-icons/im"; // possible home icon
-import { GiChessPawn } from "react-icons/gi";
+// import { GiChessPawn } from "react-icons/gi";
 
 
 
