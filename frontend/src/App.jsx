@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
 import SpotsLandingPage from './components/SpotsLandingPage';
+import SpotDetailPage from './components/SpotDetailPage/SpotDetailPage';
 
 // Style
 import { GiChessPawn } from "react-icons/gi";
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
         path: '/',
         element: <SpotsLandingPage />,
       },
+      {
+        path: '/spots/:spotId',
+        element: <SpotDetailPage />
+      }
     ],
   },
 ]);
