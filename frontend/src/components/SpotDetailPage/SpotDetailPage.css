@@ -53,3 +53,24 @@
     border: 1px solid;
     text-align: center;
   }
+
+  .reviews-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid;
+  }
+
+  .reviews-header h3 {
+    margin: 0;
+    padding: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .reviews-header h2 {
+    margin: 0;
+    padding: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }

@@ -7,6 +7,7 @@ import * as sessionActions from './store/session';
 import SpotsLandingPage from './components/SpotsLandingPage';
 import SpotDetailPage from './components/SpotDetailPage/SpotDetailPage';
 
+
 // Style
 import { GiChessPawn } from "react-icons/gi";
 import './App.css';
