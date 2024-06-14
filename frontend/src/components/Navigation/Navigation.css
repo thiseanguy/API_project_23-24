@@ -27,6 +27,8 @@ body, ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    align-items: center;
   }
 
   .nav-right {
@@ -36,6 +38,25 @@ body, ul {
     display: flex;
     align-items: center;
   }
+
+  .nav-left li,
+  .nav-right li {
+  margin: 0 10px;
+}
+
+/* Create a New Spot button styling */
+.create-spot-button {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.create-spot-button:hover {
+  background-color: #555;
+}
 
   /* Profile button styling */
   button {

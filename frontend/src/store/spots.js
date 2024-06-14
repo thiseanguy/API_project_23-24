@@ -5,7 +5,7 @@ import { csrfFetch } from './csrf';
 const SET_SPOTS = 'spots/setSpots';
 const SET_SPOT_DETAILS = 'spots/setSpotDetails'
 const SET_SPOT_REVIEWS = 'spots/setSpotReviews'
-
+const ADD_SPOT = 'spots/addSpot';
 
 // Action Creators
 const setSpots = (spots) => ({
@@ -21,6 +21,11 @@ const setSpotDetails = (spot) => ({
 const setSpotReviews = (reviews) => ({
   type: SET_SPOT_REVIEWS,
   payload: reviews,
+});
+
+const addSpot = (spot) => ({
+  type: ADD_SPOT,
+  payload: spot,
 });
 
 // Thunks
@@ -54,11 +59,27 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
   }
 };
 
+export const createSpot = (spot) => async (dispatch) => {
+  const response = await fetch('/api/spots', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(spot),
+  });
+  if (response.ok) {
+    const newSpot = await response.json();
+    dispatch(addSpot(newSpot));
+  } else {
+    console.error('Failed to create spot');
+  }
+};
+
 // Initial State
 const initialState = {
   spots: [],
   currentSpot: null,
-  spotReviews: [],
+  spotReviews: [], //potential error?
 };
 
 // Reducer
@@ -70,6 +91,8 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, currentSpot: action.payload };
     case SET_SPOT_REVIEWS:
       return { ...state, spotReviews: action.payload };
+    case ADD_SPOT:
+      return { ...state, spots: [...state.spots, action.payload] };
     default:
         return state;
   }

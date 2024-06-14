@@ -16,6 +16,11 @@ function Navigation({ isLoaded }) {
         <li>
           <NavLink to="/" className='home-icon'>{GiChessPawn}</NavLink>
         </li>
+        {sessionUser && (
+          <li>
+            <NavLink to="/spots/new" className="create-spot-button">Create a New Spot</NavLink>
+          </li>
+        )}
       </ul>
       {isLoaded && (
         <ul className="nav-right">
