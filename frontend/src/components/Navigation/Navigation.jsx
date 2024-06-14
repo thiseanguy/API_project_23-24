@@ -3,7 +3,7 @@ import { useSelector} from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 // import { ImHome } from "react-icons/im"; // possible home icon
-// import { GiChessPawn } from "react-icons/gi";
+import { GiChessPawn } from "react-icons/gi";
 
 
 
@@ -11,17 +11,22 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      {isLoaded && (
+    <div className="nav-container">
+      <ul className="nav-left">
         <li>
-          <ProfileButton user={sessionUser} />
+          <NavLink to="/" className='home-icon'>{GiChessPawn}</NavLink>
         </li>
+      </ul>
+      {isLoaded && (
+        <ul className="nav-right">
+          <li>
+            <ProfileButton user={sessionUser} />
+          </li>
+        </ul>
       )}
-    </ul>
+    </div>
   );
 }
+
 
 export default Navigation;

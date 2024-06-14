@@ -61,14 +61,15 @@
     border: 1px solid;
   }
 
-  .reviews-header h3 {
+  .reviews-header .avg-rating {
     margin: 0;
     padding: 20px;
     padding-top: 0;
     padding-bottom: 0;
+    font-size: 20px;
   }
 
-  .reviews-header h2 {
+  .reviews-header .review-title {
     margin: 0;
     padding: 20px;
     padding-top: 0;

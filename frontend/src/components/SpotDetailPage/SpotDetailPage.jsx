@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
 import { useParams } from 'react-router-dom';
+import { IoStar } from "react-icons/io5";
+import { BsDot } from "react-icons/bs";
 import './SpotDetailPage.css';
 
 const SpotDetailPage = () => {
@@ -10,6 +12,8 @@ const SpotDetailPage = () => {
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.currentSpot);
   const reviews = useSelector((state) => state.spots.spotReviews.Reviews)
+  const currentUser = useSelector((state) => state.session.user);
+
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -36,6 +40,9 @@ const SpotDetailPage = () => {
     Owner: owner,
   } = spot;
 
+  const spotOwner = spot.Owner;
+
+  const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
 
   return (
@@ -56,7 +63,7 @@ const SpotDetailPage = () => {
 
     <div className="spot-details">
         <div className="spot-info">
-            {owner && <p>Hosted by {owner.firstName} {owner.lastName}</p>}
+            <p>{`Hosted by ${owner.firstName} ${owner.lastName}`}</p>
             <p>{description}</p>
         </div>
         <div className="callout-box">
@@ -69,21 +76,45 @@ const SpotDetailPage = () => {
         </div>
         <div className="spot-reviews">
           <div className='reviews-header'>
-          <h2>Reviews: {reviews.length}</h2>
-          <h3>Avg Rating: {spot.avgRating}</h3>
+            {reviews.length > 0 ? (
+              <>
+              <h2 className='review-title'>
+                { reviews.length === 1 ? `${reviews.length} Review` : `${reviews.length} Reviews`}
+            </h2>
+            <h3 className='avg-rating'>
+              <IoStar className="star-icon"/>
+              <BsDot className="dot-icon"/>
+              {reviews.length}
+            </h3>
+              </>
+            ) : (
+              <h3>
+                <IoStar className="star-icon"/>
+                {` New`}
+              </h3>
+            )}
           </div>
           {reviews.length > 0 ? (
           <ul>
-            {reviews.map((review) => (
-              <li key={review.id}>
-                <p>{review.review}</p>
-                <p>Rating: {review.stars}</p>
-                <p>By: {review.User.firstName} {review.User.lastName}</p>
-              </li>
-            ))}
+            {recentReviews.map((review) => {
+              const reviewDate = new Date(review.createdAt);
+              const formattedDate = reviewDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+              return (
+                <li key={review.id}>
+                  <p><strong>{review.User.firstName}</strong> - {formattedDate}</p>
+                  <p>{review.review}</p>
+                  <p>Rating: {review.stars}</p>
+                  <p>Posted: {formattedDate}</p>
+                </li>
+              )
+            })}
           </ul>
         ) : (
-          <p>No reviews yet.</p>
+          currentUser && currentUser.id !== spotOwner.id ? (
+            <p>Be the first to leave a review!</p>
+          ) : (
+            <p>No reviews yet.</p>
+          )
         )}
       </div>
     </div>

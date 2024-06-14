@@ -148,7 +148,7 @@ router.get('/:spotId', async (req, res) => {
             SpotImages: spotImages,
             Owner: {
               id: owner.id,
-              firstname: owner.firstName,
+              firstName: owner.firstName,
               lastName: owner.lastName
             }
         };
