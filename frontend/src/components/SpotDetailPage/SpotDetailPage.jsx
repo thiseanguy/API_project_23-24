@@ -44,7 +44,7 @@ const SpotDetailPage = () => {
 
   const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  console.log("SPOT DETAILS", spot)
+  // console.log("SPOT DETAILS", spot)
 
   return (
     <div className="spot-detail-page">

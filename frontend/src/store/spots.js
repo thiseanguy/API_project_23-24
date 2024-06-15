@@ -75,6 +75,7 @@ export const createSpot = (spot) => async (dispatch) => {
   });
   if (response.ok) {
     const newSpot = await response.json();
+    console.log("NEWSPOTTHUNK", newSpot)
     dispatch(addSpot(newSpot));
   } else {
     console.error('Failed to create spot');
