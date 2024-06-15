@@ -6,6 +6,7 @@ const SET_SPOTS = 'spots/setSpots';
 const SET_SPOT_DETAILS = 'spots/setSpotDetails'
 const SET_SPOT_REVIEWS = 'spots/setSpotReviews'
 const ADD_SPOT = 'spots/addSpot';
+const ADD_SPOT_IMAGES = 'spots/addSpotImages';
 
 // Action Creators
 const setSpots = (spots) => ({
@@ -26,6 +27,11 @@ const setSpotReviews = (reviews) => ({
 const addSpot = (spot) => ({
   type: ADD_SPOT,
   payload: spot,
+});
+
+const addSpotImages = (images) => ({
+  type: ADD_SPOT_IMAGES,
+  payload: images,
 });
 
 // Thunks
@@ -60,7 +66,7 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
 };
 
 export const createSpot = (spot) => async (dispatch) => {
-  const response = await fetch('/api/spots', {
+  const response = await csrfFetch('/api/spots', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -72,6 +78,27 @@ export const createSpot = (spot) => async (dispatch) => {
     dispatch(addSpot(newSpot));
   } else {
     console.error('Failed to create spot');
+  }
+};
+
+export const createSpotImages = (spotId, images) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Set the Content-Type header
+      },
+      body: JSON.stringify({ images }), // Convert images array to JSON string
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      dispatch(addSpotImages(result)); // Dispatch an action if needed
+    } else {
+      console.error('Failed to add spot images');
+    }
+  } catch (error) {
+    console.error('Error adding spot images:', error);
   }
 };
 
@@ -93,6 +120,8 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, spotReviews: action.payload };
     case ADD_SPOT:
       return { ...state, spots: [...state.spots, action.payload] };
+    case ADD_SPOT_IMAGES:
+      return state;
     default:
         return state;
   }

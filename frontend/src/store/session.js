@@ -1,3 +1,5 @@
+// src/store/session.js
+
 import { csrfFetch } from './csrf';
 
 const SET_USER = "session/setUser";

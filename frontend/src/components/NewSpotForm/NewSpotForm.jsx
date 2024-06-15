@@ -7,30 +7,47 @@ import './NewSpotForm.css';
 
 const NewSpotForm = () => {
   const dispatch = useDispatch();
-  const [spotTitle, setSpotTitle] = useState('');
-  const [streetAddress, setStreetAddress] = useState('');
+  const [country, setCountry] = useState('');
+  const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
+  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-//   const [previewImage, setPreviewImage] = useState('');
-  const [additionalInfo, setAdditionalInfo] = useState('');
-  const [imageUrls, setImageUrls] = useState(['', '', '', '', '']);
+  const [previewImage, setPreviewImage] = useState('');
+  const [name, setName] = useState('');
+  const [imageUrls, setImageUrls] = useState(['', '', '', '']);
+  const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+  if (!country) newErrors.country = 'Country is required';
+  if (!address) newErrors.Address = 'Street Address is required';
+  if (!city) newErrors.city = 'City is required';
+  if (!state) newErrors.state = 'State is required';
+  if (!description || description.length < 30) newErrors.description = 'Description needs 30 or more characters';
+  if (!name) newErrors.name = 'Name of your spot is required';
+  if (!price) newErrors.price = 'Price per night is required';
+  if (!previewImage) newErrors.previewImage = 'Preview Image URL is required';
+
+  setErrors(newErrors);
+
+  if (Object.keys(newErrors).length === 0) {
     const newSpot = {
-      spotTitle,
-      streetAddress,
+      name,
       city,
       state,
       country,
+      previewImage,
+      description,
       price,
-    //   previewImage,
-      imageUrls
+      address,
     };
-    dispatch(createSpot(newSpot));
-  };
+    console.log("NEWSPOT", newSpot)
+      dispatch(createSpot(newSpot));
+  }
+};
 
   const handleImageUrlChange = (index, value) => {
     const updatedImageUrls = [...imageUrls];
@@ -54,16 +71,18 @@ const NewSpotForm = () => {
                     placeholder="Country"
                     required
                     />
+                    {errors.country && <p className="error">{errors.country}</p>}
                 </label>
                  <label>
                     Street Address:
                     <input
                         type="text"
-                        value={streetAddress}
-                        onChange={(e) => setStreetAddress(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                         placeholder="Street Address"
                         required
                     />
+                    {errors.address && <p className="error">{errors.address}</p>}
                 </label>
                 <label>
                     City:
@@ -74,6 +93,7 @@ const NewSpotForm = () => {
                         placeholder="City"
                         required
                     />
+                    {errors.city && <p className="error">{errors.city}</p>}
                 </label>
                 <label>
                 State:
@@ -84,11 +104,8 @@ const NewSpotForm = () => {
                     placeholder="State"
                     required
                 />
+                {errors.state && <p className="error">{errors.state}</p>}
                 </label>
-
-                {/* Additional fields for description, price, and preview image */}
-
-                {/* <button type="submit">Create Spot</button> */}
             </form>
         </div>
 
@@ -99,11 +116,12 @@ const NewSpotForm = () => {
           <label>
             Additional Information:
             <textarea
-              value={additionalInfo}
-              onChange={(e) => setAdditionalInfo(e.target.value)}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Please write at least 30 characters"
               required
             />
+            {errors.description && <p className="error">{errors.description}</p>}
           </label>
         </form>
       </div>
@@ -116,11 +134,12 @@ const NewSpotForm = () => {
             Name of your spot:
             <input
               type="text"
-              value={spotTitle}
-              onChange={(e) => setSpotTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Name of your spot"
               required
             />
+            {errors.name && <p className="error">{errors.name}</p>}
           </label>
 
         </form>
@@ -139,8 +158,8 @@ const NewSpotForm = () => {
               placeholder="Price per night (USD)"
               required
             />
+            {errors.price && <p className="error">{errors.price}</p>}
           </label>
-
         </form>
       </div>
 
@@ -152,11 +171,12 @@ const NewSpotForm = () => {
             Preview Image URL:
             <input
               type="text"
-              value={imageUrls[0]}
-              onChange={(e) => handleImageUrlChange(0, e.target.value)}
+              value={previewImage}
+              onChange={(e) => setPreviewImage(e.target.value)}
               placeholder="Preview Image URL"
               required
             />
+            {errors.previewImage && <p className="error">{errors.previewImage}</p>}
           </label>
           {[1, 2, 3, 4].map((index) => (
             <label key={index}>
@@ -166,7 +186,6 @@ const NewSpotForm = () => {
                 value={imageUrls[index]}
                 onChange={(e) => handleImageUrlChange(index, e.target.value)}
                 placeholder="Image URL"
-                required
               />
             </label>
           ))}
@@ -175,8 +194,6 @@ const NewSpotForm = () => {
 
       <button type="submit" onClick={handleSubmit}>Create Spot</button>
     </div>
-
-
   );
 };
 
