@@ -1,11 +1,12 @@
 // components/SpotDetailPage/SpotDetailPage.jsx
-import { useEffect, useState } from 'react';
+import { useEffect/*, useState*/ } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
-import ReviewFormModal from '../ReviewFormModal';
 import { useParams } from 'react-router-dom';
 import { IoStar } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import ReviewFormModal from '../ReviewFormModal';
 import './SpotDetailPage.css';
 
 const SpotDetailPage = () => {
@@ -14,7 +15,6 @@ const SpotDetailPage = () => {
   const spot = useSelector((state) => state.spots.currentSpot);
   const reviews = useSelector((state) => state.spots.spotReviews.Reviews)
   const currentUser = useSelector((state) => state.session.user);
-  const [showReviewFormModal, setShowReviewFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -25,10 +25,6 @@ const SpotDetailPage = () => {
     alert("Feature coming soon");
   };
 
-  const handlePostReviewClick = () => {
-    setShowReviewFormModal(true);
-  };
-
   const hasPostedReview = () => {
     if (!currentUser || !reviews) return false;
     return reviews.some(review => review.userId === currentUser.id);
@@ -37,6 +33,7 @@ const SpotDetailPage = () => {
   if (!spot) {
     return <div>Loading...</div>;
   }
+
   const {
     name,
     city,
@@ -58,15 +55,15 @@ const SpotDetailPage = () => {
     <div className="spot-detail-page">
       <h2>{name}</h2>
       <p>Location: {city}, {state}, {country}</p>
-        <div className="spot-images">
-            <div className="large-image">
-                <img src={previewImage} alt={name} className="spot-thumbnail" />
-            </div>
-            <div className="small-images">
-                {SpotImages.slice(0, 4).map((img, index) => (
-                    <img key={index} src={img.url} alt={`${name} ${index + 1}`} className="spot-thumbnail-small" />
-                ))}
+      <div className="spot-images">
+        <div className="large-image">
+          <img src={previewImage} alt={name} className="spot-thumbnail" />
         </div>
+        <div className="small-images">
+          {SpotImages.slice(0, 4).map((img, index) => (
+            <img key={index} src={img.url} alt={`${name} ${index + 1}`} className="spot-thumbnail-small" />
+          ))}
+      </div>
     </div>
     <div className="spot-details">
         <div className="spot-info">
@@ -85,41 +82,43 @@ const SpotDetailPage = () => {
           <div className='reviews-header'>
             {reviews.length > 0 ? (
               <>
-              <h2 className='review-title'>
-                { reviews.length === 1 ? `${reviews.length} Review` : `${reviews.length} Reviews`}
-            </h2>
-            <h3 className='avg-rating'>
-              <IoStar className="star-icon"/>
-              <BsDot className="dot-icon"/>
-              {reviews.length}
-            </h3>
+                <h2 className='review-title'>
+                  { reviews.length === 1 ? `${reviews.length} Review` : `${reviews.length} Reviews`}
+                </h2>
+                <h3 className='avg-rating'>
+                  <IoStar className="star-icon"/>
+                  <BsDot className="dot-icon"/>
+                  {reviews.length}
+                </h3>
               </>
             ) : (
               <h3>
                 <IoStar className="star-icon"/>
-                {` New`}
+                {` New `}
               </h3>
             )}
-            {currentUser && !hasPostedReview() && (
-              <button onClick={handlePostReviewClick}>Post Your Review</button>
+            {currentUser && currentUser.id !== spot.Owner.id && !hasPostedReview() && (
+              <OpenModalMenuItem
+              modalComponent={<ReviewFormModal spotId={spotId} /> }
+              itemText="Post Your Review"
+              />
             )}
           </div>
-          {showReviewFormModal && <ReviewFormModal spotId={spotId} onClose={() => setShowReviewFormModal(false)} />}
           {reviews.length > 0 ? (
-          <ul>
-            {recentReviews.map((review) => {
-              const reviewDate = new Date(review.createdAt);
-              const formattedDate = reviewDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-              return (
-                <li key={review.id}>
-                  <p className='bold'>{review.User.firstName} - {formattedDate}</p>
-                  <p>{review.review}</p>
-                  <p>Rating: {review.stars}</p>
-                  <p>Posted: {formattedDate}</p>
-                </li>
-              )
-            })}
-          </ul>
+            <ul>
+              {recentReviews.map((review) => {
+                const reviewDate = new Date(review.createdAt);
+                const formattedDate = reviewDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                return (
+                  <li key={review.id}>
+                    <p><strong>{review.User.firstName}</strong> - {formattedDate}</p>
+                    <p>{review.review}</p>
+                    <p>Rating: {review.stars}</p>
+                    <p>Posted: {formattedDate}</p>
+                  </li>
+                )
+              })}
+            </ul>
         ) : (
           currentUser && currentUser.id !== spotOwner.id ? (
             <p>Be the first to leave a review!</p>
