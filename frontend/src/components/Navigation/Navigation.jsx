@@ -14,7 +14,9 @@ function Navigation({ isLoaded }) {
     <div className="nav-container">
       <ul className="nav-left">
         <li>
-          <NavLink to="/" className='home-icon'>{GiChessPawn}</NavLink>
+          <NavLink to="/" className='home-icon'>
+            <GiChessPawn />
+          </NavLink>
         </li>
         {sessionUser && (
           <li>
