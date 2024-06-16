@@ -24,16 +24,21 @@ export const addReview = (spotId, review) => async (dispatch) => {
     dispatch({ type: ADD_REVIEW, payload: newReview });
 };
 
-const initialState = {
-    reviews: [],
-};
+const initialState = { spotReviews: { Reviews: [] } };
 
 const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
         case FETCH_REVIEWS:
             return { ...state, reviews: action.payload };
         case ADD_REVIEW:
-            return { ...state, reviews: [...state.reviews, action.payload] };
+            // return { ...state, reviews: [...state.reviews, action.payload] };
+            return {
+                ...state,
+                spotReviews: {
+                  ...state.spotReviews,
+                  Reviews: [action.review, ...state.spotReviews.Reviews],
+                },
+              };
         default:
             return state;
     }

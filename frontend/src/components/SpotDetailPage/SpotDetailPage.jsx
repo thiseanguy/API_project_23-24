@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { IoStar } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import { useModal } from '../../context/Modal';
 import ReviewFormModal from '../ReviewFormModal';
 import './SpotDetailPage.css';
 
@@ -15,6 +16,7 @@ const SpotDetailPage = () => {
   const spot = useSelector((state) => state.spots.currentSpot);
   const reviews = useSelector((state) => state.spots.spotReviews.Reviews)
   const currentUser = useSelector((state) => state.session.user);
+  const { setModalContent } = useModal();
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -48,8 +50,12 @@ const SpotDetailPage = () => {
   } = spot;
 
   const spotOwner = spot.Owner;
+
   const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+  const handlePostReviewClick = () => {
+    setModalContent(<ReviewFormModal spotId={spotId} />);
+  };
 
   return (
     <div className="spot-detail-page">
@@ -101,6 +107,7 @@ const SpotDetailPage = () => {
               <OpenModalMenuItem
               modalComponent={<ReviewFormModal spotId={spotId} /> }
               itemText="Post Your Review"
+              onClick={handlePostReviewClick}
               />
             )}
           </div>
