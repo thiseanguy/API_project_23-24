@@ -9,6 +9,7 @@ import SpotDetailPage from './components/SpotDetailPage/SpotDetailPage';
 import NewSpotForm from './components/NewSpotForm/NewSpotForm';
 
 
+
 // Style
 import { GiChessPawn } from "react-icons/gi";
 import './App.css';

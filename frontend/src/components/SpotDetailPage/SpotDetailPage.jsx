@@ -1,7 +1,8 @@
 // components/SpotDetailPage/SpotDetailPage.jsx
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
+import ReviewFormModal from '../ReviewFormModal';
 import { useParams } from 'react-router-dom';
 import { IoStar } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
@@ -13,7 +14,7 @@ const SpotDetailPage = () => {
   const spot = useSelector((state) => state.spots.currentSpot);
   const reviews = useSelector((state) => state.spots.spotReviews.Reviews)
   const currentUser = useSelector((state) => state.session.user);
-
+  const [showReviewFormModal, setShowReviewFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -22,6 +23,15 @@ const SpotDetailPage = () => {
 
   const handleReserveClick = () => {
     alert("Feature coming soon");
+  };
+
+  const handlePostReviewClick = () => {
+    setShowReviewFormModal(true);
+  };
+
+  const hasPostedReview = () => {
+    if (!currentUser || !reviews) return false;
+    return reviews.some(review => review.userId === currentUser.id);
   };
 
   if (!spot) {
@@ -41,16 +51,13 @@ const SpotDetailPage = () => {
   } = spot;
 
   const spotOwner = spot.Owner;
-
   const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // console.log("SPOT DETAILS", spot)
 
   return (
     <div className="spot-detail-page">
       <h2>{name}</h2>
       <p>Location: {city}, {state}, {country}</p>
-
         <div className="spot-images">
             <div className="large-image">
                 <img src={previewImage} alt={name} className="spot-thumbnail" />
@@ -61,7 +68,6 @@ const SpotDetailPage = () => {
                 ))}
         </div>
     </div>
-
     <div className="spot-details">
         <div className="spot-info">
             <p>{`Hosted by ${owner.firstName} ${owner.lastName}`}</p>
@@ -94,7 +100,11 @@ const SpotDetailPage = () => {
                 {` New`}
               </h3>
             )}
+            {currentUser && !hasPostedReview() && (
+              <button onClick={handlePostReviewClick}>Post Your Review</button>
+            )}
           </div>
+          {showReviewFormModal && <ReviewFormModal spotId={spotId} onClose={() => setShowReviewFormModal(false)} />}
           {reviews.length > 0 ? (
           <ul>
             {recentReviews.map((review) => {
@@ -102,7 +112,7 @@ const SpotDetailPage = () => {
               const formattedDate = reviewDate.toLocaleString('default', { month: 'long', year: 'numeric' });
               return (
                 <li key={review.id}>
-                  <p><strong>{review.User.firstName}</strong> - {formattedDate}</p>
+                  <p className='bold'>{review.User.firstName} - {formattedDate}</p>
                   <p>{review.review}</p>
                   <p>Rating: {review.stars}</p>
                   <p>Posted: {formattedDate}</p>
