@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
-import { fetchReviews } from '../../store/reviews';
+// import { fetchReviews } from '../../store/reviews';
 import { useParams } from 'react-router-dom';
 import { IoStar } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
