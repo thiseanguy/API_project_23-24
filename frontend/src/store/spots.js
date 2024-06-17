@@ -9,6 +9,7 @@ const ADD_SPOT = 'spots/addSpot';
 const ADD_SPOT_IMAGES = 'spots/addSpotImages';
 const SET_USER_SPOTS = 'spots/setUserSpots';
 const UPDATE_SPOT = 'spots/updateCurrentSpot';
+const REMOVE_SPOT = 'spots/removeSpot';
 
 // action creators
 const setSpots = (spots) => ({
@@ -44,6 +45,11 @@ const setUserSpots = (spots) => ({
 const updateSpot = (updatedSpotData) => ({
   type: UPDATE_SPOT,
   payload: updatedSpotData,
+});
+
+const removeSpot = (spotId) => ({
+  type: REMOVE_SPOT,
+  payload: spotId,
 });
 
 
@@ -147,6 +153,18 @@ export const editSpot = (spotId, spotData) => async (dispatch) => {
   }
 };
 
+export const deleteSpot = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: 'DELETE',
+  });
+  if (response.ok) {
+    dispatch(removeSpot(spotId));
+  } else {
+    const errorData = await response.json();
+    console.error('Failed to delete spot:', errorData.message);
+  }
+};
+
 const initialState = {
   spots: [],
   currentSpot: null,
@@ -173,6 +191,13 @@ const spotsReducer = (state = initialState, action) => {
         spots: state.spots.map(spot =>
         spot.id === action.payload.id ? { ...spot, ...action.payload } : spot),
         currentSpot: action.payload
+      }
+    case REMOVE_SPOT:
+      return {
+        ...state,
+        spots: state.spots.filter((spot) => spot.id !== action.payload),
+        userSpots: state.userSpots.filter((spot) => spot.id !== action.payload),
+        currentSpot: state.currentSpot?.id === action.payload ? null : state.currentSpot
       }
     default:
       return state;
