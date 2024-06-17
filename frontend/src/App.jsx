@@ -1,4 +1,4 @@
-// App.jsx
+// src/App.jsx
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
@@ -53,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/:spotId',
         element: <SpotDetailPage />
+      },
+      {
+        path: '/manage-spots',
+        element: <SpotManagementPage />
       }
     ],
   },

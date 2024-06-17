@@ -12,7 +12,7 @@ const SpotManagementPage = () => {
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(fetchSpotsByUser(currentUser.id));
+      dispatch(fetchSpotsByUser());
     }
   }, [dispatch, currentUser]);
 
@@ -26,7 +26,7 @@ const SpotManagementPage = () => {
       {spots.length === 0 ? (
         <div>
           <p>No spots yet.</p>
-          <NavLink to="/new-spot">Create a New Spot</NavLink>
+          <NavLink to="/spots/new">Create a New Spot</NavLink>
         </div>
       ) : (
         <div className="spot-tile-list">

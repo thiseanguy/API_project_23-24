@@ -108,11 +108,11 @@ export const createSpotImages = (spotId, images) => async (dispatch) => {
   }
 };
 
-export const fetchSpotsByUser = (userId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/${userId}`);
+export const fetchSpotsByUser = () => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/current`);
   if (response.ok) {
-    const spots = await response.json();
-    dispatch(setUserSpots(spots));
+    const data = await response.json();
+    dispatch(setUserSpots(data.spots));
   } else {
     console.error('Failed to fetch spots by user');
   }
