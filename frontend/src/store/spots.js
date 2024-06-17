@@ -125,22 +125,6 @@ export const fetchSpotsByUser = () => async (dispatch) => {
   }
 };
 
-// export const editSpot = (spotId, spotData) => async (dispatch) => {
-//   const response = await csrfFetch(`/api/spots/${spotId}`, {
-//     method: 'PUT',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(spotData),
-//   });
-//   if (response.ok) {
-//     const updatedSpot = await response.json();
-//     dispatch(updateSpot(updatedSpot));
-//     return updatedSpot;
-//   } else {
-//     console.error('Failed to update spot');
-//   }
-// };
 
 export const editSpot = (spotId, spotData) => async (dispatch) => {
   try {
