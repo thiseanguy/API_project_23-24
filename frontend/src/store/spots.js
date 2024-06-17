@@ -41,9 +41,9 @@ const setUserSpots = (spots) => ({
   payload: spots,
 });
 
-const updateSpot = (spot) => ({
+const updateSpot = (updatedSpotData) => ({
   type: UPDATE_SPOT,
-  payload: spot,
+  payload: updatedSpotData,
 });
 
 
@@ -125,19 +125,41 @@ export const fetchSpotsByUser = () => async (dispatch) => {
   }
 };
 
-export const editSpot = (spotId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(spot),
-  });
-  if (response.ok) {
-    const updatedSpot = await response.json();
-    dispatch(updateSpot(updatedSpot));
-  } else {
-    console.error('Failed to update spot');
+// export const editSpot = (spotId, spotData) => async (dispatch) => {
+//   const response = await csrfFetch(`/api/spots/${spotId}`, {
+//     method: 'PUT',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(spotData),
+//   });
+//   if (response.ok) {
+//     const updatedSpot = await response.json();
+//     dispatch(updateSpot(updatedSpot));
+//     return updatedSpot;
+//   } else {
+//     console.error('Failed to update spot');
+//   }
+// };
+
+export const editSpot = (spotId, spotData) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(spotData),
+    });
+    if (response.ok) {
+      const updatedSpot = await response.json();
+      dispatch(updateSpot(updatedSpot));  // Make sure this includes all needed data
+      return updatedSpot;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message);
+    }
+  } catch (error) {
+    console.error('Failed to update spot:', error);
+    throw error;
   }
 };
 
@@ -163,7 +185,11 @@ const spotsReducer = (state = initialState, action) => {
     case SET_USER_SPOTS:
       return { ...state, userSpots: action.payload };
     case UPDATE_SPOT:
-      return {...state, currentSpot: action.payload }
+      return {...state,
+        spots: state.spots.map(spot =>
+        spot.id === action.payload.id ? { ...spot, ...action.payload } : spot),
+        currentSpot: action.payload
+      }
     default:
       return state;
   }
