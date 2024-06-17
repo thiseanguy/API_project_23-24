@@ -1,3 +1,5 @@
+// components/SpotTile/SpotTile.jsx
+
 import { NavLink } from 'react-router-dom';
 import './SpotTile.css';
 
@@ -12,6 +14,11 @@ const SpotTile = ({ spot }) => {
           <p>Price: ${spot.price}</p>
         </div>
       </NavLink>
+      <li>
+        <button>Delete</button>
+        {/*link to UpdateSpotForm */}
+        <NavLink to={`/update-spot/${spot.id}`}>Manage Spots</NavLink>
+      </li>
     </div>
   );
 };

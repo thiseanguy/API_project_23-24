@@ -1,0 +1,11 @@
+.spots-management-page {
+    padding: 20px
+}
+
+.spot-tile-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+  }

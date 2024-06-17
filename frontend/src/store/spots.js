@@ -8,6 +8,7 @@ const SET_SPOT_REVIEWS = 'spots/setSpotReviews';
 const ADD_SPOT = 'spots/addSpot';
 const ADD_SPOT_IMAGES = 'spots/addSpotImages';
 const SET_USER_SPOTS = 'spots/setUserSpots';
+const UPDATE_SPOT = 'spots/updateCurrentSpot';
 
 // action creators
 const setSpots = (spots) => ({
@@ -38,6 +39,11 @@ const addSpotImages = (images) => ({
 const setUserSpots = (spots) => ({
   type: SET_USER_SPOTS,
   payload: spots,
+});
+
+const updateSpot = (spot) => ({
+  type: UPDATE_SPOT,
+  payload: spot,
 });
 
 
@@ -110,11 +116,28 @@ export const createSpotImages = (spotId, images) => async (dispatch) => {
 
 export const fetchSpotsByUser = () => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/current`);
+
   if (response.ok) {
     const data = await response.json();
-    dispatch(setUserSpots(data.spots));
+    dispatch(setUserSpots(data.Spots));
   } else {
     console.error('Failed to fetch spots by user');
+  }
+};
+
+export const editSpot = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(spot),
+  });
+  if (response.ok) {
+    const updatedSpot = await response.json();
+    dispatch(updateSpot(updatedSpot));
+  } else {
+    console.error('Failed to update spot');
   }
 };
 
@@ -139,6 +162,8 @@ const spotsReducer = (state = initialState, action) => {
       return state;
     case SET_USER_SPOTS:
       return { ...state, userSpots: action.payload };
+    case UPDATE_SPOT:
+      return {...state, currentSpot: action.payload }
     default:
       return state;
   }

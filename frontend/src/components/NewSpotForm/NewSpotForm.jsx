@@ -45,7 +45,6 @@ const NewSpotForm = () => {
       address,
     };
     dispatch(createSpot(newSpot));
-    console.log("NEWSPOT", newSpot)
   }
 };
 

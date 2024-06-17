@@ -59,28 +59,11 @@
     color: #666;
   }
 
-  /* #city-state {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-  }
-
-  #avg-rating {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-  } */
   .avg-rating {
     display: flex;
     align-items: center;
     font-size: 0.9em;
   }
-/*
-  .spot-info #city-rating {
-    flex-direction: row;
-    justify-content: space-around;
-  } */
 
   .spot-info p {
     margin: 5px 0 0;
