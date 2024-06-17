@@ -113,11 +113,22 @@ router.get('/:spotId', async (req, res) => {
     try {
         const spotId = req.params.spotId;
 
-        const spot = await Spot.findByPk(spotId);
+        const spot = await Spot.findByPk(spotId, {
+          include: [
+            {
+              model: Review,
+              attributes: ['stars']
+            }
+          ]
+        });
+
         if (!spot) {
-            return res.status(404).json({ error: "Spot could not be found" });
+          return res.status(404).json({ message: "We couldn't find your spot" });
         }
 
+        const reviews = spot.Reviews;
+        const totalRating = reviews.reduce((acc, review) => acc + review.stars, 0);
+        const avgRating = reviews.length ? (totalRating / reviews.length) : 0;
 
         const owner = await User.findByPk(spot.ownerId)
         const spotImages = await SpotImage.findAll({
@@ -146,6 +157,7 @@ router.get('/:spotId', async (req, res) => {
             avgRating: spot.avgRating,
             previewImage: spot.previewImage,
             SpotImages: spotImages,
+            avgRating: avgRating,
             Owner: {
               id: owner.id,
               firstName: owner.firstName,
@@ -445,7 +457,6 @@ router.get('/:spotid/reviews', async (req, res) => {
 
     const {review, stars} = req.body;
     const userId = req.user.id;
-
     const spotId = req.params.spotid
 
     const spot = await Spot.findByPk(spotId);
@@ -453,20 +464,6 @@ router.get('/:spotid/reviews', async (req, res) => {
     if (!spot) {
         return res.status(404).json({ message: "We couldn't find your spot" });
     };
-
-    // const reviewCheck = await Review.findAll({
-    //     where: {
-    //         userId: userId
-    //     }
-    // });
-
-    // if (reviewCheck.length) {
-    //     return res.status(500).json({
-    //         error: "You already have a review for this spot"
-    //     })
-    // };
-
-      // Check if the user has already submitted a review for this spot
 
       const existingReview = await Review.findOne({
         where: {
@@ -487,6 +484,19 @@ router.get('/:spotid/reviews', async (req, res) => {
         review,
         stars,
     });
+
+    // Fetch all reviews for this spot to calculate the new average rating
+    const reviews = await Review.findAll({
+      where: {
+        spotId: spotId
+      }
+    });
+
+    const totalRating = reviews.reduce((acc, review) => acc + review.stars, 0);
+    const avgRating = totalRating / reviews.length;
+
+    // Update the spot's average rating
+    await spot.update({ avgRating });
 
     const resReview = {
       id: newReview.id,

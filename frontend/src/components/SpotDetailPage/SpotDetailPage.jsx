@@ -1,7 +1,8 @@
 // components/SpotDetailPage/SpotDetailPage.jsx
-import { useEffect/*, useState*/ } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
+import { fetchReviews } from '../../store/reviews';
 import { useParams } from 'react-router-dom';
 import { IoStar } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
@@ -77,11 +78,9 @@ const SpotDetailPage = () => {
             <p>{description}</p>
         </div>
         <div className="callout-box">
-            <p>Rating: {avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'}</p>
-            <p>
-                Price: ${price}
-            </p>
-                <button className='reserve-button' onClick={handleReserveClick}>Reserve</button>
+            <p>Rating: {avgRating.toFixed(1) < 1 && avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'}</p>
+            <p>Price: ${price}</p>
+            <button className='reserve-button' onClick={handleReserveClick}>Reserve</button>
             </div>
         </div>
         <div className="spot-reviews">
@@ -89,13 +88,14 @@ const SpotDetailPage = () => {
             {reviews.length > 0 ? (
               <>
                 <h2 className='review-title'>
-                  { reviews.length === 1 ? `${reviews.length} Review` : `${reviews.length} Reviews`}
+                  {reviews.length === 1 ? `${reviews.length} Review` : `${reviews.length} Reviews`}
                 </h2>
                 <h3 className='avg-rating'>
                   <IoStar className="star-icon"/>
                   <BsDot className="dot-icon"/>
-                  {reviews.length}
+                  {avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'}
                 </h3>
+
               </>
             ) : (
               <h3>
@@ -121,9 +121,8 @@ const SpotDetailPage = () => {
                     <p><strong>{review.User.firstName}</strong> - {formattedDate}</p>
                     <p>{review.review}</p>
                     <p>Rating: {review.stars}</p>
-                    <p>Posted: {formattedDate}</p>
                   </li>
-                )
+                );
               })}
             </ul>
         ) : (
