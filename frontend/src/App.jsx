@@ -7,6 +7,7 @@ import * as sessionActions from './store/session';
 import SpotsLandingPage from './components/SpotsLandingPage';
 import SpotDetailPage from './components/SpotDetailPage/SpotDetailPage';
 import NewSpotForm from './components/NewSpotForm/NewSpotForm';
+import SpotManagementPage from './components/SpotManagementPage/SpotManagementPage';
 
 
 

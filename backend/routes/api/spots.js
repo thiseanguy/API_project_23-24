@@ -67,7 +67,7 @@ try {
 }
 });
 
-
+// get all spots by current user
 router.get('/current', requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;

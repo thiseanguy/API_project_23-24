@@ -7,7 +7,9 @@ const SET_SPOT_DETAILS = 'spots/setSpotDetails';
 const SET_SPOT_REVIEWS = 'spots/setSpotReviews';
 const ADD_SPOT = 'spots/addSpot';
 const ADD_SPOT_IMAGES = 'spots/addSpotImages';
+const SET_USER_SPOTS = 'spots/setUserSpots';
 
+// action creators
 const setSpots = (spots) => ({
   type: SET_SPOTS,
   payload: spots,
@@ -32,6 +34,14 @@ const addSpotImages = (images) => ({
   type: ADD_SPOT_IMAGES,
   payload: images,
 });
+
+const setUserSpots = (spots) => ({
+  type: SET_USER_SPOTS,
+  payload: spots,
+});
+
+
+// Thunks
 
 export const fetchSpots = () => async (dispatch) => {
   const response = await csrfFetch('/api/spots', {
@@ -98,9 +108,20 @@ export const createSpotImages = (spotId, images) => async (dispatch) => {
   }
 };
 
+export const fetchSpotsByUser = (userId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/${userId}`);
+  if (response.ok) {
+    const spots = await response.json();
+    dispatch(setUserSpots(spots));
+  } else {
+    console.error('Failed to fetch spots by user');
+  }
+};
+
 const initialState = {
   spots: [],
   currentSpot: null,
+  userSpots: [],
   spotReviews: { Reviews: [] },
 };
 
@@ -116,6 +137,8 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, spots: [...state.spots, action.payload] };
     case ADD_SPOT_IMAGES:
       return state;
+    case SET_USER_SPOTS:
+      return { ...state, userSpots: action.payload };
     default:
       return state;
   }
