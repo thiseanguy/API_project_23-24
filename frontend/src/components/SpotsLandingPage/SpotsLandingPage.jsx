@@ -15,8 +15,6 @@ const SpotsLandingPage = () => {
     dispatch(fetchSpots());
   }, [dispatch]);
 
-  // console.log('Spots from state:', spots);
-
   if (!Array.isArray(spots)) {
     return <div>Loading...</div>;
   }
