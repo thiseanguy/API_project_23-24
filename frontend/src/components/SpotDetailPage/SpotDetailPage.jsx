@@ -1,36 +1,22 @@
 // components/SpotDetailPage/SpotDetailPage.jsx
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSpotDetails, fetchSpotReviews } from '../../store/spots';
-// import { fetchReviews } from '../../store/reviews';
+import { fetchSpotDetails } from '../../store/spots';
 import { useParams } from 'react-router-dom';
-import { IoStar } from "react-icons/io5";
-import { BsDot } from "react-icons/bs";
-import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
-import { useModal } from '../../context/Modal';
-import ReviewFormModal from '../ReviewFormModal';
+import ReviewsList from '../ReviewsList';
 import './SpotDetailPage.css';
 
 const SpotDetailPage = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.currentSpot);
-  const reviews = useSelector((state) => state.spots.spotReviews.Reviews)
-  const currentUser = useSelector((state) => state.session.user);
-  const { setModalContent } = useModal();
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
-    dispatch(fetchSpotReviews(spotId));
   }, [dispatch, spotId]);
 
   const handleReserveClick = () => {
     alert("Feature coming soon");
-  };
-
-  const hasPostedReview = () => {
-    if (!currentUser || !reviews) return false;
-    return reviews.some(review => review.userId === currentUser.id);
   };
 
   if (!spot) {
@@ -50,13 +36,10 @@ const SpotDetailPage = () => {
     Owner: owner,
   } = spot;
 
-  const spotOwner = spot.Owner;
+  // const spotOwner = spot.Owner;
 
-  const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // const recentReviews = reviews.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  const handlePostReviewClick = () => {
-    setModalContent(<ReviewFormModal spotId={spotId} />);
-  };
 
   return (
     <div className="spot-detail-page">
@@ -78,12 +61,14 @@ const SpotDetailPage = () => {
             <p>{description}</p>
         </div>
         <div className="callout-box">
-            <p>Rating: {avgRating.toFixed(1) < 1 && avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'}</p>
+            <p>Rating: {/*avgRating.toFixed(1) < 1 && avgRating !== undefined && avgRating !== null ? avgRating.toFixed(1) : 'New'*/}
+            {avgRating ? avgRating.toFixed(1) : 'New'}
+            </p>
             <p>Price: ${price}</p>
             <button className='reserve-button' onClick={handleReserveClick}>Reserve</button>
             </div>
         </div>
-        <div className="spot-reviews">
+        {/* <div className="spot-reviews">
           <div className='reviews-header'>
             {reviews.length > 0 ? (
               <>
@@ -131,8 +116,9 @@ const SpotDetailPage = () => {
           ) : (
             <p>No reviews yet.</p>
           )
-        )}
-      </div>
+        )} */}
+        <ReviewsList spotId={spotId} />
+      {/* </div> */}
     </div>
   );
 };
