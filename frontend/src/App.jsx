@@ -1,10 +1,16 @@
-// App.jsx
+// src/App.jsx
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
 import SpotsLandingPage from './components/SpotsLandingPage';
+import SpotDetailPage from './components/SpotDetailPage/SpotDetailPage';
+import NewSpotForm from './components/NewSpotForm/NewSpotForm';
+import SpotManagementPage from './components/SpotManagementPage/SpotManagementPage';
+import UpdateSpotForm from './components/UpdateSpotForm';
+
+
 
 // Style
 import { GiChessPawn } from "react-icons/gi";
@@ -41,6 +47,22 @@ const router = createBrowserRouter([
         path: '/',
         element: <SpotsLandingPage />,
       },
+      {
+        path: '/spots/new',
+        element: <NewSpotForm />
+      },
+      {
+        path: '/spots/:spotId',
+        element: <SpotDetailPage />
+      },
+      {
+        path: '/manage-spots',
+        element: <SpotManagementPage />
+      },
+      {
+        path: '/update-spot/:spotId',
+        element: <UpdateSpotForm />
+      }
     ],
   },
 ]);

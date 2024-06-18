@@ -16,6 +16,34 @@ const router = express.Router();
 
 router.use(restoreUser);
 
+router.post('/:spotId/images', async (req, res) => {
+    const { spotId } = req.params;
+    const { images } = req.body;
+
+    try {
+      const spot = await Spot.findByPk(spotId);
+
+      if (!spot) {
+        return res.status(404).json({ error: 'Spot not found' });
+      }
+
+      const spotImages = await Promise.all(
+        images.map(async (image) => {
+          const newImage = await SpotImage.create({
+            spotId,
+            url: image.url,
+            preview: image.preview || false
+          });
+          return newImage;
+        })
+      );
+
+      res.status(201).json(spotImages);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to add images' });
+    }
+  });
+
 // delete spot-image
 router.delete('/:imageId',
     requireAuth,

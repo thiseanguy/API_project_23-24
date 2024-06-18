@@ -39,11 +39,33 @@
     flex-grow: 1;
   }
 
+  .spot-info .spot-location-rating {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .city-state, .avg-rating {
+    margin: 0;
+    color: #666;
+  }
+
   .spot-info h2 {
     margin: 0 0 5px;
   }
 
   .spot-info p {
     margin: 0;
+    color: #666;
+  }
+
+  .avg-rating {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+  }
+
+  .spot-info p {
+    margin: 5px 0 0;
     color: #666;
   }
