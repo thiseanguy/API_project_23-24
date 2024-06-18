@@ -53,11 +53,6 @@ const UpdateSpotForm = () => {
           [name]: value
         }));
       };
-    // const handleImageUrlChange = (index, value) => {
-    //     const updatedImageUrls = [...formData.imageUrls];
-    //     updatedImageUrls[index] = value;
-    //     setFormData({...formData, imageUrls: updatedImageUrls});
-    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -75,14 +70,12 @@ const UpdateSpotForm = () => {
 
     const validateForm = () => {
         const newErrors = {};
-        // Add your validation logic here similar to the NewSpotForm
         return newErrors;
       };
 
     return (
         <div className="update-spot-form">
             <h2>Update Your Spot</h2>
-            {/* The rest of your form layout here, similar to NewSpotForm */}
             <form onSubmit={handleSubmit}>
             <label>
                 Country:
@@ -160,7 +153,6 @@ const UpdateSpotForm = () => {
                 />
                 {errors.price && <p className="error">{errors.price}</p>}
             </label>
-            {/* More inputs for address, city, state, etc. */}
             <button type="submit">Update Spot</button>
             </form>
         </div>
