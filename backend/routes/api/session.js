@@ -1,4 +1,4 @@
-// backend/routes/api/session.js
+
 const express = require('express')
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
@@ -36,12 +36,11 @@ router.post(
           }
         }
       });
-
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error('Login failed');
+        const err = new Error('invalid credentials');
         err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials were invalid.' };
+        // err.title = 'Login failed';
+        // err.errors = { credential: 'The provided credentials were invalid.' };
         return next(err);
       }
 

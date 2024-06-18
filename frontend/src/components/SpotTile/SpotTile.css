@@ -1,0 +1,43 @@
+/* SpotTile.css */
+.spot-link {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Ensures full block navigation */
+}
+
+.spot-thumbnail {
+  width: 100%; /* Adjust according to your design */
+  border-radius: 5px; /* Optional */
+}
+
+.spot-info {
+  padding: 10px;
+}
+
+.spot-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.spot-action-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  height: 20%
+}
+
+.spot-action-button:hover {
+  background-color: #666;
+  color: white;
+}
+
+.spot-action-button:link, .spot-action-button:visited {
+  color: white;
+}
