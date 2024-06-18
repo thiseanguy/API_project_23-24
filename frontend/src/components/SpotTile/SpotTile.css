@@ -1,59 +1,43 @@
-.spot-tile {
-    display: flex;
-    flex-direction: column;
-    width: calc(25% - 20px);
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-  }
+/* SpotTile.css */
+.spot-link {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Ensures full block navigation */
+}
 
-  .spot-tile:hover {
-    transform: scale(1.05);
-  }
+.spot-thumbnail {
+  width: 100%; /* Adjust according to your design */
+  border-radius: 5px; /* Optional */
+}
 
-  .spot-thumbnail {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-  }
+.spot-info {
+  padding: 10px;
+}
 
-  .spot-info {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex-grow: 1;
-  }
+.spot-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
 
-  .spot-info .spot-location-rating {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.spot-action-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  height: 20%
+}
 
-  .city-state, .avg-rating {
-    margin: 0;
-    color: #666;
-  }
+.spot-action-button:hover {
+  background-color: #666;
+  color: white;
+}
 
-  .spot-info h2 {
-    margin: 0 0 5px;
-  }
-
-  .spot-info p {
-    margin: 0;
-    color: #666;
-  }
-
-  .avg-rating {
-    display: flex;
-    align-items: center;
-    font-size: 0.9em;
-  }
-
-  .spot-info p {
-    margin: 5px 0 0;
-    color: #666;
-  }
+.spot-action-button:link, .spot-action-button:visited {
+  color: white;
+}
